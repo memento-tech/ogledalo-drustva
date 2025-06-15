@@ -1,7 +1,7 @@
 {
-  "name": "news-app",
+  "name": "ogledalo-drustva",
   "version": "0.1.0",
-  "homepage": "https://gitname.github.io/ogledalo-drustva",
+  "homepage": "https://memento-tech.github.io/ogledalo-drustva",
   "private": true,
   "dependencies": {
     "@formspree/react": "^3.0.0",
