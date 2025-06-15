@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/ogledalo-drustva/static/css/main.7b9e90b3.css",
+    "main.js": "/ogledalo-drustva/static/js/main.dee37beb.js",
+    "static/media/cover-image.webp": "/ogledalo-drustva/static/media/cover-image.a2ea577a23108f893c86.webp",
+    "static/media/instagram.png": "/ogledalo-drustva/static/media/instagram.e719d8b29f452a16302d.png",
+    "static/media/founder-image.webp": "/ogledalo-drustva/static/media/founder-image.e81dc9fd5ae2418cd11a.webp",
+    "static/media/linkedin.png": "/ogledalo-drustva/static/media/linkedin.d21b834035baa551e886.png",
+    "static/media/twiterX.png": "/ogledalo-drustva/static/media/twiterX.ee7686ce501bde413ff6.png",
+    "static/media/facebook.png": "/ogledalo-drustva/static/media/facebook.795fce8e464693d7346d.png",
+    "static/media/logo-512.png": "/ogledalo-drustva/static/media/logo-512.60b19d24ce1663f65e42.png",
+    "index.html": "/ogledalo-drustva/index.html",
+    "main.7b9e90b3.css.map": "/ogledalo-drustva/static/css/main.7b9e90b3.css.map",
+    "main.dee37beb.js.map": "/ogledalo-drustva/static/js/main.dee37beb.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7b9e90b3.css",
+    "static/js/main.dee37beb.js"
+  ]
+}
