@@ -32,6 +32,8 @@ const Container = styled.div`
 
   @media screen and (max-width: ${(props) => props.theme.screen.small}) {
     grid-template-columns: 1fr;
+    grid-gap: 0.5rem;
+    grid-row-gap: 6rem;
   }
 
   @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
@@ -65,6 +67,10 @@ const NewsCard = styled.div`
     }
   }
 
+  @media screen and (max-width: ${(props) => props.theme.screen.small}) {
+    padding: 5px;
+  }
+
   @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
     max-width: 100%;
   }
@@ -96,11 +102,20 @@ const NewsTextContainer = styled.div`
   bottom: -70px;
   padding: 1rem;
   box-sizing: border-box;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.small}) {
+    bottom: -90px;
+    padding: 0.5rem;
+  }
 `;
 
 const NewsTitle = styled.h3`
   margin: 0;
   padding: 0;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    font-size: ${(props) => props.theme.fonts.medium} !important;
+  }
 `;
 
 const NewsText = styled.p`
@@ -110,6 +125,11 @@ const NewsText = styled.p`
   -webkit-line-clamp: 4;
   line-clamp: 4;
   -webkit-box-orient: vertical;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.small}) {
+    padding: 0;
+    margin-bottom: 0.5rem;
+  }
 `;
 
 const ReadMoreText = styled.p`

@@ -48,6 +48,6 @@ const MainContainer = styled.div`
   min-height: 80vh;
 
   @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
-    width: 90%;
+    width: 95%;
   }
 `;
