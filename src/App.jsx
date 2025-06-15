@@ -1,6 +1,6 @@
 import { ThemeProvider } from "styled-components";
 import { defaultTheme } from "./themes/DefaultTheme";
-import { BrowserRouter, Route, Routes } from "react-router";
+import { Route, Routes } from "react-router";
 import HomePage from "./pages/HomePage";
 import PageTemplate from "./pages/PageTemplate";
 import "./index.css";
@@ -11,7 +11,7 @@ import ContactPage from "./pages/ContactPage";
 function App() {
   return (
     <ThemeProvider theme={defaultTheme}>
-      <BrowserRouter>
+      <HashRouter>
         <PageTemplate>
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -20,7 +20,7 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
           </Routes>
         </PageTemplate>
-      </BrowserRouter>
+      </HashRouter>
     </ThemeProvider>
   );
 }
