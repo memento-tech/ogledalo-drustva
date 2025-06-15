@@ -1,6 +1,6 @@
 import { ThemeProvider } from "styled-components";
 import { defaultTheme } from "./themes/DefaultTheme";
-import { Route, Routes } from "react-router";
+import { Route, Routes, HashRouter } from "react-router";
 import HomePage from "./pages/HomePage";
 import PageTemplate from "./pages/PageTemplate";
 import "./index.css";
