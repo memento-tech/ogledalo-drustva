@@ -84,18 +84,33 @@ const LogoAndNameContainer = styled.div`
 
 const Logo = styled.img`
   width: 350px;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    width: 200px;
+  }
 `;
 
 const AboutUsContainer = styled.div`
   display: flex;
   flex-direction: row;
   margin-bottom: 3rem;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.small}) {
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    width: 100%;
+  }
 `;
 
 const Title = styled.h3`
-  font-size: ${(props) => props.theme.fonts.title};
   font-style: italic;
-  font-weight: 300;
+  font-weight: 400;
   margin-top: 0;
 `;
 
@@ -108,6 +123,17 @@ const AboutUsImage = styled.img`
   width: 60%;
   border-radius: 10px;
   margin-left: 1rem;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.small}) {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 1rem;
+  }
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    width: 80%;
+  }
 `;
 
 const TextContainer = styled.div`
@@ -126,10 +152,19 @@ const FounterContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: 3rem;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.small}) {
+    flex-direction: column;
+  }
 `;
 
 const FounderImage = styled.img`
   max-width: 270px;
   border-radius: 10px;
   margin-right: 1rem;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.small}) {
+    margin: 0;
+    margin-bottom: 1rem;
+  }
 `;

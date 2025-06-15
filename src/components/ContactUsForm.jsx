@@ -93,8 +93,10 @@ const FormStyled = styled.form`
   width: 100%;
   max-width: 600px;
 
-  @media screen and (max-width: 600px) {
-    width: 80%;
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    width: 95%;
+    margin-top: 1rem;
+    max-width: unset;
   }
 
   background: transparent;

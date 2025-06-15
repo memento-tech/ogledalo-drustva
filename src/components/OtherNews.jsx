@@ -29,6 +29,14 @@ const Container = styled.div`
   grid-row-gap: 6rem;
   margin-top: 3rem;
   margin-bottom: 8rem;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.small}) {
+    grid-template-columns: 1fr;
+  }
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    grid-template-columns: 1fr 1fr;
+  }
 `;
 
 const NewsCard = styled.div`
@@ -56,6 +64,10 @@ const NewsCard = styled.div`
       bottom: unset;
     }
   }
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    max-width: 100%;
+  }
 `;
 
 const NewsImage = styled.img`
@@ -66,6 +78,10 @@ const NewsImage = styled.img`
   border-radius: 5px;
   overflow: hidden;
   opacity: 0.9;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    max-width: 100%;
+  }
 `;
 
 const NewsTextContainer = styled.div`
@@ -78,20 +94,16 @@ const NewsTextContainer = styled.div`
   width: 90%;
   border-radius: 5px;
   bottom: -70px;
-  text-align: center;
   padding: 1rem;
   box-sizing: border-box;
 `;
 
 const NewsTitle = styled.h3`
-  text-align: center;
   margin: 0;
   padding: 0;
-  font-size: ${(props) => props.theme.fonts.medium};
 `;
 
 const NewsText = styled.p`
-  font-size: ${(props) => props.theme.fonts.small};
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -103,5 +115,4 @@ const NewsText = styled.p`
 const ReadMoreText = styled.p`
   display: none;
   visibility: hidden;
-  font-size: ${(props) => props.theme.fonts.small};
 `;

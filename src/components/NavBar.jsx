@@ -100,11 +100,10 @@ const LogoLink = styled(StyledLink)`
   font-weight: 400;
   font-style: normal;
   margin: 0;
-  font-size: 1.5rem;
+  font-size: ${(props) => props.theme.fonts.title};
   color: #131313;
 
   display: flex;
-  text-align: center;
   justify-content: center;
   align-items: center;
 `;

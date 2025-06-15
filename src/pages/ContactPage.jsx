@@ -32,14 +32,16 @@ const PageContainer = styled.div`
   width: 100%;
 `;
 
-const Title = styled.h4`
+const Title = styled.h3`
   margin-top: 2rem;
-  font-size: 20px;
 `;
 
 const Text = styled.p`
   width: 600px;
   margin: 0;
   margin-bottom: 0.5rem;
-  text-align: center;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    width: 95%;
+  }
 `;

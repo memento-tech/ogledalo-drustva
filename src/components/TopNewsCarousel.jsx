@@ -55,8 +55,8 @@ const TopNewsCarousel = ({ news = [] }) => {
     <CarouselContainer>
       <CarouselImage src={visibleNews.img} />
       <CarouselTextContainer>
-        <h3>{visibleNews.topTitle}</h3>
-        <p>{visibleNews.topDescription}</p>
+        <TopNewsTitle>{visibleNews.topTitle}</TopNewsTitle>
+        <TopNewsText>{visibleNews.topDescription}</TopNewsText>
       </CarouselTextContainer>
       <ReadMoreLink className="scalableOnHover">read more →</ReadMoreLink>
       <TopNewsCounterDots>
@@ -103,6 +103,27 @@ const CarouselContainer = styled.div`
       scale: 1.1;
     }
   }
+
+  @media screen and (max-width: ${(props) => props.theme.screen.small}) {
+    flex-direction: column;
+    justify-content: start;
+  }
+`;
+
+const TopNewsTitle = styled.h3`
+  @media screen and (max-width: ${(props) => props.theme.screen.small}) {
+    margin: 0;
+    padding: 0;
+    margin-top: 1rem;
+  }
+`;
+
+const TopNewsText = styled.p`
+  @media screen and (max-width: ${(props) => props.theme.screen.small}) {
+    max-height: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
 
 const CarouselImage = styled.img`
@@ -112,6 +133,12 @@ const CarouselImage = styled.img`
   object-position: center;
   border-radius: 10px;
   overflow: hidden;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.small}) {
+    height: 200px;
+    max-height: 200px;
+    min-height: 200px;
+  }
 `;
 
 const CarouselTextContainer = styled.div`
@@ -120,6 +147,10 @@ const CarouselTextContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin: 0 2rem 0 3rem;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.small}) {
+    margin: 0 1rem;
+  }
 `;
 
 const ReadMoreLink = styled.a`
@@ -127,6 +158,7 @@ const ReadMoreLink = styled.a`
   bottom: 10px;
   right: 10px;
   font-style: italic;
+  font-size: ${(props) => props.theme.fonts.small};
 `;
 
 const TopNewsCounterDots = styled.div`
@@ -178,6 +210,11 @@ const LeftArrowNav = styled.div`
     color: black;
     scale: 1.01;
   }
+
+  @media screen and (max-width: ${(props) => props.theme.screen.small}) {
+    display: none;
+    visibility: hidden;
+  }
 `;
 
 const RightArrowNav = styled.div`
@@ -192,5 +229,10 @@ const RightArrowNav = styled.div`
   &:hover {
     color: black;
     scale: 1.01;
+  }
+
+  @media screen and (max-width: ${(props) => props.theme.screen.small}) {
+    display: none;
+    visibility: hidden;
   }
 `;

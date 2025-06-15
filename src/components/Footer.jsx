@@ -62,6 +62,7 @@ const Footer = () => {
             <SocialMediaLink src={twiterXLogo} />
           </a>
         </LinksContainer>
+        <LinksHeader>Follow us:</LinksHeader>
       </FooterContent>
       <Copyright>© 2025 Memento Tech</Copyright>
     </FooterContainer>
@@ -80,12 +81,23 @@ const FooterContainer = styled.div`
   border-radius: 15px;
   box-sizing: border-box;
   padding-top: 2rem;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    padding-top: 1rem;
+  }
 `;
 
 const FooterContent = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  height: 380px;
+  min-height: 380px;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 const FooterCentralContent = styled.div`
@@ -107,13 +119,16 @@ const LogoTitle = styled.h3`
 
 const Copyright = styled.p`
   font-family: sans-serif;
-  font-size: 0.8rem;
   font-weight: 100;
 `;
 
 const LogoTextSmall = styled.p`
   font-style: italic;
   margin: 0;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    width: 80%;
+  }
 `;
 
 const LinksContainer = styled.div`
@@ -121,6 +136,21 @@ const LinksContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    flex-direction: row;
+    margin-bottom: 3rem;
+  }
+`;
+
+const LinksHeader = styled.p`
+  display: none;
+  visibility: hidden;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    display: block;
+    visibility: visible;
+  }
 `;
 
 const SocialMediaLink = styled.img`
@@ -130,18 +160,27 @@ const SocialMediaLink = styled.img`
   cursor: pointer;
 
   margin: 0.2rem 0;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    margin: 0 10px;
+  }
 `;
 
 const ContactInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    margin-top: 3rem;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
 `;
 
 const ContactInfo = styled.a`
   margin: 0;
   padding: 0;
-  font-size: 0.9rem;
   margin-bottom: 5px;
 
   color: inherit;

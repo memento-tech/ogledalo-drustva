@@ -24,7 +24,6 @@ export const defaultTheme = {
     large: "1500px",
     medium: "1200px",
     small: "800px",
-    verySmall: "400px",
   },
   size: {
     sendwichIconSize: "2rem",

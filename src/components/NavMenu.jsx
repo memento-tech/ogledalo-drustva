@@ -32,7 +32,7 @@ const NavMenu = ({ open, children, changeNavPopupOpen }) => {
         color={defaultTheme.colors.primary}
       />
       {open && <NavPopup>{children}</NavPopup>}
-      {open && <WholeScreenHolder />}
+      {open && <WholeScreenHolder onClick={() => changeNavPopupOpen(!open)} />}
     </>
   );
 };

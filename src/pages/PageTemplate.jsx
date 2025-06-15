@@ -25,10 +25,29 @@ const PageContainer = styled.div`
   min-height: 100vh;
   background-color: ${(props) => props.theme.colors.background};
   color: ${(props) => props.theme.colors.textPrimary};
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    text-align: center;
+  }
+
+  font-weight: 100;
+  font-family: "Merriweather", serif;
+
+  p {
+    font-size: ${(props) => props.theme.fonts.small};
+  }
+
+  h3 {
+    font-size: ${(props) => props.theme.fonts.title};
+  }
 `;
 
 const MainContainer = styled.div`
   flex-grow: 1;
   width: 80%;
   min-height: 80vh;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    width: 90%;
+  }
 `;
