@@ -1,12 +1,14 @@
 import styled from "styled-components";
 import ArrowIcon from "./ArrowIcon";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const TopNewsCarousel = ({ news = [] }) => {
   const [displayableNews, setDisplayableNews] = useState(news.slice(0, 5));
   const [visibleNews, setVisibleNews] = useState();
   const [counter, setCounter] = useState(0);
   const intervalRef = useRef(null);
+  let navigate = useNavigate();
 
   const isDotActive = (newsId) => {
     return visibleNews.id === newsId;
@@ -53,12 +55,14 @@ const TopNewsCarousel = ({ news = [] }) => {
 
   return (
     <CarouselContainer>
-      <CarouselImage src={visibleNews.img} />
-      <CarouselTextContainer>
-        <TopNewsTitle>{visibleNews.topTitle}</TopNewsTitle>
-        <TopNewsText>{visibleNews.topDescription}</TopNewsText>
-      </CarouselTextContainer>
-      <ReadMoreLink className="scalableOnHover">read more →</ReadMoreLink>
+      <TopNewsContainer onClick={() => navigate("/news?id=" + visibleNews.id)}>
+        <CarouselImage src={visibleNews.img} />
+        <CarouselTextContainer>
+          <TopNewsTitle>{visibleNews.topTitle}</TopNewsTitle>
+          <TopNewsText>{visibleNews.topDescription}</TopNewsText>
+        </CarouselTextContainer>
+        <ReadMoreLink className="scalableOnHover">read more →</ReadMoreLink>
+      </TopNewsContainer>
       <TopNewsCounterDots>
         {displayableNews.map((newsData, index) => (
           <DotStyled
@@ -80,14 +84,20 @@ const TopNewsCarousel = ({ news = [] }) => {
 
 export default TopNewsCarousel;
 
-const CarouselContainer = styled.div`
+const TopNewsContainer = styled.div`
   width: 100%;
-  height: 500px;
+  height: 100%;
+
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: stretch;
   flex-direction: row;
+`;
+
+const CarouselContainer = styled.div`
+  width: 100%;
+  height: 500px;
 
   margin: 2rem 0;
   padding: 10px;
@@ -203,6 +213,7 @@ const LeftArrowNav = styled.div`
   top: 50%;
   left: -70px;
   transform: translateY(-50%);
+  cursor: pointer;
 
   color: #5a5a5a;
 
@@ -223,6 +234,7 @@ const RightArrowNav = styled.div`
   right: -70px;
   transform: translateY(50%);
   rotate: 180deg;
+  cursor: pointer;
 
   color: #5a5a5a;
 

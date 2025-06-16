@@ -1,10 +1,15 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-const OtherNews = ({ news = [] }) => {
+const OtherNews = ({ news = [], limit = 15 }) => {
+  let navigate = useNavigate();
   return (
     <Container>
-      {news.map((newsData, index) => (
-        <NewsCard key={index} onClick={() => console.log("clicked")}>
+      {news.slice(0, limit).map((newsData, index) => (
+        <NewsCard
+          key={index}
+          onClick={() => navigate("/news?id=" + newsData.id)}
+        >
           <NewsImage src={newsData.img} />
           <NewsTextContainer id="textContainer">
             <NewsTitle className="titleAndText">{newsData.topTitle}</NewsTitle>

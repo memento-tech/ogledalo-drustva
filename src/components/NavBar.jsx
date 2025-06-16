@@ -87,11 +87,13 @@ const LogoImage = styled.img`
 const StyledLink = styled(Link)`
   color: ${(props) => props.theme.colors.textPrimary};
   margin: 0.8rem;
+  display: inline-block;
 
   text-decoration: none;
 
   &:hover {
     color: black;
+    transform: scale(1.1);
   }
 `;
 
