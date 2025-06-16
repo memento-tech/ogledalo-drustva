@@ -93,6 +93,11 @@ const TopNewsContainer = styled.div`
   justify-content: space-between;
   align-items: stretch;
   flex-direction: row;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.small}) {
+    flex-direction: column;
+    justify-content: start;
+  }
 `;
 
 const CarouselContainer = styled.div`
@@ -112,11 +117,6 @@ const CarouselContainer = styled.div`
     .scalableOnHover {
       scale: 1.1;
     }
-  }
-
-  @media screen and (max-width: ${(props) => props.theme.screen.small}) {
-    flex-direction: column;
-    justify-content: start;
   }
 `;
 
@@ -159,7 +159,7 @@ const CarouselTextContainer = styled.div`
   margin: 0 2rem 0 3rem;
 
   @media screen and (max-width: ${(props) => props.theme.screen.small}) {
-    margin: 0 1rem;
+    margin: auto;
   }
 `;
 
