@@ -1,14 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-const OtherNews = ({ news = [], limit = 15 }) => {
+const OtherNews = ({ news = [], limit = 15, presentational = false }) => {
   let navigate = useNavigate();
   return (
-    <Container>
+    <Container $presentational={presentational}>
       {news.slice(0, limit).map((newsData, index) => (
         <NewsCard
           key={index}
           onClick={() => navigate("/news?id=" + newsData.id)}
+          $presentational={presentational}
         >
           <NewsImage src={newsData.img} />
           <NewsTextContainer id="textContainer">
@@ -29,7 +30,8 @@ export default OtherNews;
 const Container = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: ${(props) =>
+    props.$presentational ? "1fr" : "1fr 1fr 1fr"};
   grid-gap: 2rem;
   grid-row-gap: 6rem;
   margin-top: 3rem;
@@ -58,7 +60,7 @@ const NewsCard = styled.div`
   cursor: pointer;
 
   &:hover {
-    scale: 1.1;
+    scale: ${(props) => (props.$presentational ? "1" : "1.1")};
     .titleAndText {
       @media screen and (min-width: ${(props) => props.theme.screen.small}) {
         display: none;

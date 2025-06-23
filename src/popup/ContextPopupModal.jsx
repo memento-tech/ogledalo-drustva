@@ -71,7 +71,7 @@ const StyledDialog = styled.dialog`
   border: 0;
   box-shadow: 0 5px 30px 0 rgb(0 0 0 / 10%);
 
-  background: ${(props) => props.theme.colors.white};
+  background: ${(props) => props.theme.colors.background};
 
   animation: fadeIn 0.5s ease both;
   position: relative;

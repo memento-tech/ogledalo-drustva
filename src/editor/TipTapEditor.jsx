@@ -54,11 +54,10 @@ const TipTapEditor = () => {
         onClick={() => setInfoOpen(false)}
       />
       <EditorContentWrapper
-        ref={targetRef}
         $infoOpen={infoOpen}
         onClick={() => setInfoOpen(false)}
       >
-        <StyledEditorContent editor={editor} />
+        <StyledEditorContent editor={editor} ref={targetRef} />
       </EditorContentWrapper>
     </EditorWrapper>
   );

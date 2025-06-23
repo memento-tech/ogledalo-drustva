@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export const PopupMainContainer = styled.div`
-  width: 100%;
   width: ${(props) =>
     // @ts-ignore
     props.$width

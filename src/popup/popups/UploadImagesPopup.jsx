@@ -120,7 +120,7 @@ const UploadImagesPopup = ({
                 >
                   {selectedImages &&
                     selectedImages.find(
-                      (image) => image.src === imageData.src
+                      (image) => image && image.src === imageData.src
                     ) && (
                       <Selector>
                         <CheckedIcon />

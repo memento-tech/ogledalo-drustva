@@ -123,6 +123,7 @@ const TipTapEditorToolbar = ({ editor, onDownloadPDF, onClick }) => {
       setTextAlignCounter(currentTextAlignIndex);
     }
   }, [
+    editor,
     editor.isActive("bold"),
     editor.isActive("italic"),
     editor.isActive("underline"),

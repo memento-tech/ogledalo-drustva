@@ -1,33 +1,85 @@
 import styled from "styled-components";
 import ArrowIcon from "../../icons/ArrowIcon";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ImageUploadIcon from "../../icons/ImageUploadIcon";
 import { usePopups } from "../../popup/PopupContext";
 import UploadImagesPopup from "../../popup/popups/UploadImagesPopup";
+import ButtonOutlined from "../../components/ButtonOutlined";
+import TopNewsPresentationPopup from "../../popup/popups/TopNewsPresentationPopup";
+import ListNewsPresentationPopup from "../../popup/popups/ListNewsPresentationPopup";
 
+const s = [
+  {
+    id: "1",
+    img: "https://media.istockphoto.com/id/1389157460/photo/newspaper-and-digital-tablet-on-wooden-table.webp?s=1024x1024&w=is&k=20&c=P_V3EhDOn-jdB5cCA771B5lvW0XWQnsVuXBI2Ioyg_g=",
+    topTitle: "Globalne stope inflacije pokazuju znake stabilizacije",
+    topDescription:
+      "Nakon burne 2024. godine, ekonomisti izveštavaju o sporom, ali stabilnom padu globalne inflacije, što uliva nadu u stabilniju 2025. godinu.",
+  },
+];
 const NewsInformationEditor = ({ infoOpen, setInfoOpen }) => {
   const [publishOption, setPublishOption] = useState("draft");
-  const [topImages, setTopImages] = useState();
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [topImage, setTopImage] = useState();
   const { addPopup } = usePopups();
-  const [index, setIndex] = useState(0);
+  const [isTopNews, setIsTopNews] = useState(true);
 
-  const openImagesUploadPopup = () => {
+  const openImageUploadPopup = () => {
     addPopup((key, zIndex, closePopup) => (
       <UploadImagesPopup
         key={key}
         onSubmit={(data) => {
-          if (!data) return;
-          setTopImages(data);
+          if (!data && data.length > 0) return;
+          setTopImage(data[0]);
         }}
         zIndex={zIndex}
         closePopup={closePopup}
-        oneImageOnly={false}
-        presetImages={topImages}
+        oneImageOnly={true}
+        presetImages={[topImage]}
       />
     ));
   };
 
-  const handleDotClick = (i) => setIndex(i);
+  const handleTopNewsPresentationPopup = () => {
+    addPopup((key, zIndex, closePopup) => (
+      <TopNewsPresentationPopup
+        key={key}
+        zIndex={zIndex}
+        closePopup={closePopup}
+        newsData={[
+          {
+            img: topImage && topImage.src,
+            topTitle: title,
+            topDescription: description,
+          },
+        ]}
+      />
+    ));
+  };
+
+  const handleListNewsPresentationPopup = () => {
+    addPopup((key, zIndex, closePopup) => (
+      <ListNewsPresentationPopup
+        key={key}
+        zIndex={zIndex}
+        closePopup={closePopup}
+        newsData={[
+          {
+            img: topImage && topImage.src,
+            topTitle: title,
+            topDescription: description,
+          },
+        ]}
+      />
+    ));
+  };
+
+  const getTomorrowDateISO = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toISOString().split("T")[0];
+  };
 
   return (
     <Container $infoOpen={infoOpen}>
@@ -37,12 +89,23 @@ const NewsInformationEditor = ({ infoOpen, setInfoOpen }) => {
         <LeftContainer>
           <InputContainer>
             <label>News title: </label>
-            <input placeholder="Title" />
+            <InputStyled
+              placeholder="Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
           </InputContainer>
 
           <InputContainer>
             <label>Top description: </label>
-            <input placeholder="Top description" />
+            <TextAreaStyled
+              rows={5}
+              required
+              maxLength={300}
+              placeholder="Top description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
           </InputContainer>
 
           <SelectContainer>
@@ -58,38 +121,57 @@ const NewsInformationEditor = ({ infoOpen, setInfoOpen }) => {
           </SelectContainer>
 
           {publishOption === "onDate" && (
-            <InputContainer>
+            <SelectContainer>
               <label>Publish date: </label>
-              <input type="date" />
-            </InputContainer>
+              <input type="date" min={getTomorrowDateISO()} />
+            </SelectContainer>
           )}
+          <SelectContainer>
+            <label>Include in Top News:</label>
+            <RadioGroup>
+              <label>
+                <input
+                  type="radio"
+                  name="topNews"
+                  value="yes"
+                  checked={isTopNews}
+                  onChange={() => setIsTopNews(true)}
+                />
+                Yes
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="topNews"
+                  value="no"
+                  checked={!isTopNews}
+                  onChange={() => setIsTopNews(false)}
+                />
+                No
+              </label>
+            </RadioGroup>
+          </SelectContainer>
+
+          <PresentationButtonContainer>
+            <ButtonOutlined onClick={handleTopNewsPresentationPopup}>
+              View Top News Presentation
+            </ButtonOutlined>
+            <ButtonOutlined onClick={handleListNewsPresentationPopup}>
+              View List News Presentation
+            </ButtonOutlined>
+          </PresentationButtonContainer>
         </LeftContainer>
         <ImageContainer
-          onClick={() =>
-            topImages && topImages.length > 0
-              ? () => {}
-              : openImagesUploadPopup()
-          }
-          $withCursor={topImages && topImages.length > 0}
+          onClick={() => (topImage ? () => {} : openImageUploadPopup())}
+          $withCursor={topImage}
         >
-          {topImages && topImages.length > 0 && (
+          {topImage && (
             <>
-              <TopCarouselImage src={topImages[index].src} />
-              <EditButton onClick={openImagesUploadPopup}>✏️</EditButton>
-              {topImages.length > 1 && (
-                <DotsContainer>
-                  {topImages.map((_, i) => (
-                    <Dot
-                      key={i}
-                      active={i === index}
-                      onClick={() => handleDotClick(i)}
-                    />
-                  ))}
-                </DotsContainer>
-              )}
+              <TopCarouselImage src={topImage.src} />
+              <EditButton onClick={openImageUploadPopup}>✏️</EditButton>
             </>
           )}
-          {(!topImages || topImages.length === 0) && (
+          {!topImage && (
             <>
               <ImageUploadIcon height={30} />
               <p>
@@ -126,9 +208,9 @@ const Container = styled.div`
   padding-bottom: 2rem;
   background-color: white;
   z-index: 1000;
-  height: 400px;
+  height: 450px;
 
-  transform: translateY(${(props) => (props.$infoOpen ? "0" : "-370px")});
+  transform: translateY(${(props) => (props.$infoOpen ? "0" : "-420px")});
   transition: transform 1s ease;
 `;
 
@@ -154,7 +236,8 @@ const ImageContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 300px;
+  height: 100%;
+  max-height: 360px;
   text-align: center;
   cursor: ${(props) => (props.$withCursor ? "default" : "pointer")};
 
@@ -168,7 +251,10 @@ const ImageContainer = styled.div`
 const InputContainer = styled.div`
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.2rem;
 `;
 
 const Title = styled.p`
@@ -194,12 +280,13 @@ const SelectContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 0.2rem;
 
   select {
     padding: 4px 6px;
     border-radius: 4px;
     border: 1px solid #aaa;
-    font-size: 14px;
+    font-size: 12px;
     cursor: pointer;
   }
 `;
@@ -210,21 +297,6 @@ const TopCarouselImage = styled.img`
   object-fit: cover;
   border-radius: 10px;
   transition: opacity 0.5s ease;
-`;
-
-const DotsContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 10px;
-`;
-
-const Dot = styled.span`
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: ${({ active }) => (active ? "black" : "#ccc")};
-  cursor: pointer;
 `;
 
 const EditButton = styled.button`
@@ -239,5 +311,63 @@ const EditButton = styled.button`
   font-size: 12px;
   &:hover {
     background: #eee;
+  }
+`;
+
+const PresentationButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: auto;
+`;
+
+const TextAreaStyled = styled.textarea`
+  width: 100%;
+  color: ${(props) => props.theme.colors.textPrimary};
+  border: none;
+  border-bottom: 2px solid ${(props) => props.theme.colors.borderInactive};
+  outline: none;
+  background-color: transparent;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+  font-size: inherit;
+  resize: none;
+
+  &:focus {
+    border-color: ${(props) => props.theme.colors.border};
+  }
+`;
+
+const InputStyled = styled.input`
+  width: 100%;
+  color: ${(props) => props.theme.colors.textPrimary};
+  border: none;
+  border-bottom: 2px solid ${(props) => props.theme.colors.border};
+  outline: none;
+  background-color: transparent;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+  font-size: inherit;
+
+  &:focus {
+    border-color: rgba(36, 91, 150, 0.97);
+  }
+`;
+
+const RadioGroup = styled.div`
+  display: flex;
+  gap: 0.5rem;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  input[type="radio"] {
+    cursor: pointer;
   }
 `;

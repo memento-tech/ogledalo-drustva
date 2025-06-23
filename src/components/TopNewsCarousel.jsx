@@ -72,8 +72,11 @@ const TopNewsCarousel = ({ news = [] }) => {
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        $imagePresent={
+          visibleNews.img !== null && visibleNews.img !== undefined
+        }
       >
-        <CarouselImage src={visibleNews.img} />
+        <CarouselImage src={visibleNews.img} alt="No image found" />
         <CarouselTextContainer>
           <TopNewsTitle>{visibleNews.topTitle}</TopNewsTitle>
           <TopNewsText>{visibleNews.topDescription}</TopNewsText>
@@ -81,15 +84,17 @@ const TopNewsCarousel = ({ news = [] }) => {
         <ReadMoreLink className="scalableOnHover">read more →</ReadMoreLink>
       </TopNewsContainer>
 
-      <TopNewsCounterDots>
-        {displayableNews.map((newsData, index) => (
-          <DotStyled
-            key={index}
-            className={isDotActive(newsData.id) ? "active" : ""}
-            onClick={() => selectSlide(index)}
-          />
-        ))}
-      </TopNewsCounterDots>
+      {displayableNews.length > 1 && (
+        <TopNewsCounterDots>
+          {displayableNews.map((newsData, index) => (
+            <DotStyled
+              key={index}
+              className={isDotActive(newsData.id) ? "active" : ""}
+              onClick={() => selectSlide(index)}
+            />
+          ))}
+        </TopNewsCounterDots>
+      )}
 
       <LeftArrowNav onClick={goToPreviousSlide}>
         <ArrowIcon height={50} />
@@ -111,7 +116,7 @@ const TopNewsContainer = styled.div`
   cursor: pointer;
   display: flex;
   justify-content: space-between;
-  align-items: stretch;
+  align-items: ${(props) => (props.$imagePresent ? "stretch" : "center")};
   flex-direction: row;
 
   @media screen and (max-width: ${(props) => props.theme.screen.small}) {
@@ -157,7 +162,8 @@ const TopNewsText = styled.p`
 `;
 
 const CarouselImage = styled.img`
-  min-width: 55%;
+  min-width: 60%;
+  max-width: 60%;
   max-height: 500px;
   object-fit: cover;
   object-position: center;
@@ -177,6 +183,7 @@ const CarouselTextContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin: 0 2rem 0 3rem;
+  width: 40%;
 
   @media screen and (max-width: ${(props) => props.theme.screen.small}) {
     margin: auto;

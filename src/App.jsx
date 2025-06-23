@@ -16,8 +16,8 @@ import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
 function App() {
   return (
     <ThemeProvider theme={defaultTheme}>
-      <PopupProvider>
-        <HashRouter>
+      <HashRouter>
+        <PopupProvider>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/projects" element={<ProjectsPage />} />
@@ -29,8 +29,8 @@ function App() {
             <Route path="/admin/settings" element={<AdminSettingsPage />} />
             <Route path="/*" element={<ErrorPage />} />
           </Routes>
-        </HashRouter>
-      </PopupProvider>
+        </PopupProvider>
+      </HashRouter>
     </ThemeProvider>
   );
 }
