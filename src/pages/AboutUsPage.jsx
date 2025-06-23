@@ -2,10 +2,11 @@ import styled from "styled-components";
 import coverImage from "../assets/cover-image.webp";
 import logoLarge from "../assets/logo-512.png";
 import founterImage from "../assets/founder-image.webp";
+import PageTemplate from "./PageTemplate";
 
 const AboutUsPage = () => {
   return (
-    <>
+    <PageTemplate>
       <LogoAndNameContainer>
         <Logo src={logoLarge} />
         Ogledalo Drustva
@@ -64,7 +65,7 @@ const AboutUsPage = () => {
           </Text>
         </TextContainer>
       </FounterContainer>
-    </>
+    </PageTemplate>
   );
 };
 

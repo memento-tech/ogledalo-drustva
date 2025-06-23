@@ -1,5 +1,5 @@
-import CloseIcon from "./CloseIcon";
-import MenuIcon from "./MenuIcon";
+import CloseIcon from "../icons/CloseIcon";
+import MenuIcon from "../icons/MenuIcon";
 
 const { default: styled } = require("styled-components");
 

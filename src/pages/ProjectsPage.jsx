@@ -1,5 +1,7 @@
+import PageTemplate from "./PageTemplate";
+
 const ProjectsPage = () => {
-  return <div>Projects page</div>;
+  return <PageTemplate>Projects page</PageTemplate>;
 };
 
 export default ProjectsPage;

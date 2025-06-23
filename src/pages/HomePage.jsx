@@ -2,13 +2,16 @@ import styled from "styled-components";
 import TopNewsCarousel from "../components/TopNewsCarousel";
 import OtherNews from "../components/OtherNews";
 import { exampleNews } from "../assets/exampleData";
+import PageTemplate from "./PageTemplate";
 
 const HomePage = () => {
   return (
-    <HomePageContainer>
-      <TopNewsCarousel news={exampleNews} />
-      <OtherNews news={exampleNews} />
-    </HomePageContainer>
+    <PageTemplate>
+      <HomePageContainer>
+        <TopNewsCarousel news={exampleNews} />
+        <OtherNews news={exampleNews} />
+      </HomePageContainer>
+    </PageTemplate>
   );
 };
 

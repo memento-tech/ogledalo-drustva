@@ -38,7 +38,7 @@ const Container = styled.div`
   @media screen and (max-width: ${(props) => props.theme.screen.small}) {
     grid-template-columns: 1fr;
     grid-gap: 0.5rem;
-    grid-row-gap: 6rem;
+    grid-row-gap: 6.5rem;
   }
 
   @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
@@ -60,20 +60,26 @@ const NewsCard = styled.div`
   &:hover {
     scale: 1.1;
     .titleAndText {
-      display: none;
-      visibility: hidden;
+      @media screen and (min-width: ${(props) => props.theme.screen.small}) {
+        display: none;
+        visibility: hidden;
+      }
     }
     #readMoreText {
-      display: block;
-      visibility: visible;
+      @media screen and (min-width: ${(props) => props.theme.screen.small}) {
+        display: block;
+        visibility: visible;
+      }
     }
     #textContainer {
-      bottom: unset;
+      @media screen and (min-width: ${(props) => props.theme.screen.small}) {
+        bottom: unset;
+      }
     }
   }
 
   @media screen and (max-width: ${(props) => props.theme.screen.small}) {
-    padding: 5px;
+    padding: 1px;
   }
 
   @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
@@ -133,7 +139,7 @@ const NewsText = styled.p`
 
   @media screen and (max-width: ${(props) => props.theme.screen.small}) {
     padding: 0;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 `;
 

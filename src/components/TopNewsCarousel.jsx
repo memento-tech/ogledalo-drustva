@@ -1,24 +1,22 @@
 import styled from "styled-components";
-import ArrowIcon from "./ArrowIcon";
+import ArrowIcon from "../icons/ArrowIcon";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const TopNewsCarousel = ({ news = [] }) => {
-  const [displayableNews, setDisplayableNews] = useState(news.slice(0, 5));
+  const displayableNews = news.slice(0, 5);
   const [visibleNews, setVisibleNews] = useState();
   const [counter, setCounter] = useState(0);
   const intervalRef = useRef(null);
-  let navigate = useNavigate();
+  const touchStartX = useRef(null);
+  const touchEndX = useRef(null);
+  const navigate = useNavigate();
 
-  const isDotActive = (newsId) => {
-    return visibleNews.id === newsId;
-  };
+  const isDotActive = (newsId) => visibleNews.id === newsId;
 
   const resetInterval = () => {
     if (intervalRef.current) clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(() => {
-      goToNextSlide();
-    }, 4000);
+    intervalRef.current = setInterval(goToNextSlide, 4000);
   };
 
   useEffect(() => {
@@ -32,8 +30,8 @@ const TopNewsCarousel = ({ news = [] }) => {
   };
 
   const goToPreviousSlide = () => {
-    setCounter((prev) =>
-      prev - 1 < 0 ? displayableNews.length - 1 : prev - 1
+    setCounter(
+      (prev) => (prev - 1 + displayableNews.length) % displayableNews.length
     );
     resetInterval();
   };
@@ -44,18 +42,37 @@ const TopNewsCarousel = ({ news = [] }) => {
   };
 
   useEffect(() => {
-    if (news && news.length > 0) {
-      setVisibleNews(displayableNews[counter]);
-    }
+    if (news?.length > 0) setVisibleNews(displayableNews[counter]);
   }, [displayableNews, counter, news]);
 
-  if (!visibleNews) {
-    return <></>;
-  }
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const distance = touchStartX.current - touchEndX.current;
+    Math.abs(distance) > 50 && distance > 0
+      ? goToNextSlide()
+      : goToPreviousSlide();
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
+
+  if (!visibleNews) return null;
 
   return (
     <CarouselContainer>
-      <TopNewsContainer onClick={() => navigate("/news?id=" + visibleNews.id)}>
+      <TopNewsContainer
+        onClick={() => navigate("/news?id=" + visibleNews.id)}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         <CarouselImage src={visibleNews.img} />
         <CarouselTextContainer>
           <TopNewsTitle>{visibleNews.topTitle}</TopNewsTitle>
@@ -63,6 +80,7 @@ const TopNewsCarousel = ({ news = [] }) => {
         </CarouselTextContainer>
         <ReadMoreLink className="scalableOnHover">read more →</ReadMoreLink>
       </TopNewsContainer>
+
       <TopNewsCounterDots>
         {displayableNews.map((newsData, index) => (
           <DotStyled
@@ -72,9 +90,11 @@ const TopNewsCarousel = ({ news = [] }) => {
           />
         ))}
       </TopNewsCounterDots>
+
       <LeftArrowNav onClick={goToPreviousSlide}>
         <ArrowIcon height={50} />
       </LeftArrowNav>
+
       <RightArrowNav onClick={goToNextSlide}>
         <ArrowIcon height={50} />
       </RightArrowNav>

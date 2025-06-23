@@ -1,9 +1,24 @@
-Nakon više od dve godine ekonomske neizvesnosti izazvane pandemijom COVID-19, ratom u Ukrajini, poremećajima u lancima snabdevanja i rastućim cenama energenata, globalne stope inflacije konačno pokazuju prve jasne znake stabilizacije. Najnoviji izveštaji vodećih svetskih ekonomskih instituta i centralnih banaka ukazuju na usporavanje rasta cena u mnogim regionima sveta, uključujući Evropu, Severnu Ameriku i Aziju.
-
-Prema podacima Međunarodnog monetarnog fonda (MMF), prosečna globalna inflacija pala je sa rekordnih 8,7% u 2022. godini na 5,3% početkom 2025. godine. Ovaj pad delimično je rezultat restriktivnih monetarnih politika koje su sprovodile centralne banke, uključujući povećanje referentnih kamatnih stopa i smanjenje javne potrošnje. Takođe, stabilizacija cena energenata i hrane, koje su bile glavni pokretači inflacije, dodatno je doprinela ovom pozitivnom trendu.
-
-Uprkos tome, stručnjaci upozoravaju da proces stabilizacije još nije završen. Iako su cene osnovnih dobara i usluga u padu, troškovi života i dalje ostaju visoki za prosečnog građanina, posebno u zemljama u razvoju. Postoji i zabrinutost da bi prerano popuštanje mera moglo dovesti do novog inflatornog talasa. Zbog toga se centralne banke zalažu za oprezan pristup – nastavak praćenja tržišnih indikatora i spremnost za dodatne intervencije ukoliko bude potrebno.
-
-Pozitivne promene posebno su vidljive u sektoru građevinarstva, automobilske industrije i maloprodaje, gde dolazi do postepenog oporavka potrošnje. Kompanije pokazuju veće poverenje u tržište, što se ogleda u porastu investicija i zapošljavanju. Takođe, potrošači, iako još uvek oprezni, sve češće ulažu u trajnu robu i usluge, što dodatno pokreće ekonomsku aktivnost.
-
-Ekonomisti naglašavaju da je stabilizacija inflacije važan korak ka širem ekonomskom oporavku. Ako se trenutni trendovi nastave, moguće je da do kraja godine dođe do potpune normalizacije tržišnih uslova. Ipak, ključ uspeha leži u međunarodnoj saradnji, efikasnim politikama i prilagodljivosti u nepredvidivom globalnom okruženju.
+<h3 style="text-align:center">
+        Devs Just Want to Have Fun by Cyndi Lauper
+      </h3>
+      <p style="text-align:center">
+        I come home in the morning light<br>
+        My mother says, <mark>“When you gonna live your life right?”</mark><br>
+        Oh mother dear we’re not the fortunate ones<br>
+        And devs, they wanna have fun<br>
+        Oh devs just want to have fun</p>
+      <p style="text-align:center">
+        The phone rings in the middle of the night<br>
+        My father yells, "What you gonna do with your life?"<br>
+        Oh daddy dear, you know you’re still number one<br>
+        But <s>girls</s>devs, they wanna have fun<br>
+        Oh devs just want to have
+      </p>
+      <p style="text-align:center">
+        That’s all they really want<br>
+        Some fun<br>
+        When the working day is done<br>
+        Oh devs, they wanna have fun<br>
+        Oh devs just wanna have fun<br>
+        (devs, they wanna, wanna have fun, devs wanna have)
+      </p>
