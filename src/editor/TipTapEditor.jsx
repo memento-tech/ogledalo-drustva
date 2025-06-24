@@ -80,6 +80,10 @@ const EditorContentWrapper = styled.div`
   margin-left: 60px;
   margin-right: 20px;
   padding-top: 1rem;
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    margin-left: 40px;
+    margin-right: 0;
+  }
 `;
 
 const StyledEditorContent = styled(EditorContent)`

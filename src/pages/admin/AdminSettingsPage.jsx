@@ -66,6 +66,13 @@ const Container = styled.div`
   margin: 2rem;
   gap: 1rem;
   padding-bottom: 2rem;
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    box-sizing: border-box;
+    margin: 0;
+    width: 100%;
+    margin-top: 2rem;
+    overflow: hidden;
+  }
 `;
 
 const PartContainer = styled.div`
@@ -78,11 +85,21 @@ const PartContainer = styled.div`
   justify-content: center;
   align-items: center;
   gap: 1rem;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    box-sizing: border-box;
+    width: 90%;
+    padding: 1rem 0;
+  }
 `;
 
 const InputContainer = styled.div`
   width: 100%;
   display: flex;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    flex-direction: column;
+  }
 `;
 
 const Label = styled.p`
@@ -92,6 +109,11 @@ const Label = styled.p`
   padding-left: 1rem;
   margin: 0;
   font-size: ${(props) => props.theme.fonts.small};
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    width: 100%;
+    text-align: start;
+  }
 `;
 
 const InputStyled = styled.input`
@@ -110,5 +132,10 @@ const InputStyled = styled.input`
 
   &:focus {
     border-color: rgba(36, 91, 150, 0.97);
+  }
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    width: auto;
+    margin-right: 1rem;
   }
 `;

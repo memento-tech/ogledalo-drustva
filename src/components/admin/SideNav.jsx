@@ -14,9 +14,15 @@ const SideNav = ({ sideNavOpen, setSideNavOpen }) => {
       </ArrowIconContainer>
       <AdminPanelTitle>Admin Panel</AdminPanelTitle>
       <LinkContainer>
-        <StyledLink to="/admin">Editor</StyledLink>
-        <StyledLink to="/admin/news">All news</StyledLink>
-        <StyledLink to="/admin/settings">Information</StyledLink>
+        <StyledLink to="/admin" onClick={() => setSideNavOpen(false)}>
+          Editor
+        </StyledLink>
+        <StyledLink to="/admin/news" onClick={() => setSideNavOpen(false)}>
+          All news
+        </StyledLink>
+        <StyledLink to="/admin/settings" onClick={() => setSideNavOpen(false)}>
+          Information
+        </StyledLink>
       </LinkContainer>
       <Logo src={logo} />
       <CompanyName>Ogledalo drustva</CompanyName>
@@ -40,6 +46,19 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    position: absolute;
+    left: 0;
+    background-color: #ffffff;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+
+    transform: ${(props) =>
+      props.$sideNavOpen ? "0" : "translateX(calc(100% - 30px))"};
+    transition: transform 1s ease;
+  }
 `;
 
 const ArrowIconContainer = styled.div`

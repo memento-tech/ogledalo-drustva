@@ -133,13 +133,14 @@ export default AdminNewsListPage;
 
 const TableContainer = styled.div`
   width: 100%;
-  margin-top: 2rem;
+  overflow-x: auto;
+  margin: 2rem;
   padding-bottom: 2rem;
-  display: flex;
-  justify-content: center;
+  position: relative;
 `;
 
 const StyledTable = styled.table`
+  min-width: 700px;
   width: 95%;
   border-collapse: collapse;
   font-size: 0.95rem;

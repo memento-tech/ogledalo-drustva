@@ -212,12 +212,36 @@ const Container = styled.div`
 
   transform: translateY(${(props) => (props.$infoOpen ? "0" : "-420px")});
   transition: transform 1s ease;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    box-sizing: border-box;
+    width: calc(100% - 40px);
+    height: 100%;
+    padding-bottom: 2rem;
+    justify-content: start;
+    align-items: center;
+    transform: translateY(
+      ${(props) => (props.$infoOpen ? "0" : "calc(-100% + 30px)")}
+    );
+  }
 `;
 
 const MainContainer = styled.div`
   display: flex;
   justify-content: space-between;
   height: 100%;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    box-sizing: border-box;
+    flex-direction: column;
+    position: absolute;
+    background-color: white;
+    gap: 1rem;
+    justify-content: center;
+    height: auto;
+    width: 90%;
+    margin: auto;
+  }
 `;
 
 const LeftContainer = styled.div`
@@ -225,6 +249,10 @@ const LeftContainer = styled.div`
   flex-direction: column;
   width: 30%;
   gap: 10px;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    width: 100%;
+  }
 `;
 
 const ImageContainer = styled.div`
@@ -245,6 +273,12 @@ const ImageContainer = styled.div`
     font-size: 12px;
     width: 50%;
     font-style: italic;
+  }
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    width: 100%;
+    min-height: 200px;
+    max-height: 200px;
   }
 `;
 
@@ -320,6 +354,10 @@ const PresentationButtonContainer = styled.div`
   align-items: center;
   gap: 1rem;
   margin-top: auto;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
+    flex-direction: column;
+  }
 `;
 
 const TextAreaStyled = styled.textarea`

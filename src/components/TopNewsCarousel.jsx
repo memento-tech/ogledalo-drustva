@@ -174,6 +174,7 @@ const CarouselImage = styled.img`
     height: 200px;
     max-height: 200px;
     min-height: 200px;
+    max-width: 100%;
   }
 `;
 
@@ -187,6 +188,7 @@ const CarouselTextContainer = styled.div`
 
   @media screen and (max-width: ${(props) => props.theme.screen.small}) {
     margin: auto;
+    width: 100%;
   }
 `;
 
