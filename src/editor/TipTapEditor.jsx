@@ -11,10 +11,37 @@ import TipTapEditorToolbar from "./TipTapEditorToolbar";
 import TipTapFontSize from "./components/TipTapFontSize";
 import { useRef, useState } from "react";
 import generatePDF from "react-to-pdf";
-import NewsInformationEditor from "./components/NewsInformationEditor";
+import DocumentInformationEditor from "./components/DocumentInformationEditor";
 import { CustomImages } from "./components/ImagesComponent";
 
+const dummySavedDocument = {
+  content:
+    "<h2>Previously saved document</h2><p>This is your saved content.</p>",
+  info: {
+    title: "Saved Document Title",
+    description: "Some description for the saved document",
+  },
+};
+
 const TipTapEditor = () => {
+  const [documentInfo, setDocumentInfo] = useState();
+
+  const loadSavedDocument = () => {
+    if (!editor) return;
+    editor.commands.setContent(dummySavedDocument.content);
+    setDocumentInfo(dummySavedDocument.info);
+  };
+
+  const saveDocument = () => {
+    let editorContent = editor.getHTML();
+    let jsonContent = editor.getJSON();
+    let textContent = editor.getText();
+
+    console.log(editorContent);
+    console.log(jsonContent);
+    console.log(textContent);
+  };
+
   const [infoOpen, setInfoOpen] = useState(true);
 
   const editor = useEditor({
@@ -34,7 +61,7 @@ const TipTapEditor = () => {
 
   const targetRef = useRef();
 
-  const handleDownload = async () => {
+  const handleDownloadPDF = async () => {
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     generatePDF(targetRef, {
@@ -47,10 +74,15 @@ const TipTapEditor = () => {
 
   return (
     <EditorWrapper>
-      <NewsInformationEditor infoOpen={infoOpen} setInfoOpen={setInfoOpen} />
+      <DocumentInformationEditor
+        infoOpen={infoOpen}
+        setInfoOpen={setInfoOpen}
+        documentInfo={documentInfo}
+        onDocumentInfoChange={setDocumentInfo}
+      />
       <TipTapEditorToolbar
         editor={editor}
-        onDownloadPDF={handleDownload}
+        onDownloadPDF={handleDownloadPDF}
         onClick={() => setInfoOpen(false)}
       />
       <EditorContentWrapper

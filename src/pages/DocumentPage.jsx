@@ -4,12 +4,13 @@ import { exampleNews } from "../assets/exampleData";
 import OtherNews from "../components/OtherNews";
 import styled from "styled-components";
 import LoadingOverlay from "../components/LoadingOverlay";
-import NewsMarkdown from "../components/NewsMarkdown";
+import DocumentMarkdown from "../components/DocumentMarkdown";
 import PageTemplate from "./PageTemplate";
+import { enhanceCarousels } from "../components/CarouselEnhancer";
 
-const NewsPage = () => {
+const DocumentPage = () => {
   const [searchParams] = useSearchParams();
-  const [visibleNews, setVisibleNews] = useState();
+  const [visibleDocument, setVisibleDocument] = useState();
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -24,28 +25,31 @@ const NewsPage = () => {
       )
         .then((response) => response.text())
         .then((text) => {
-          setVisibleNews(text);
+          setVisibleDocument(text);
           setLoading(false);
         });
     } else {
       setErrorMessage("News not found");
       setLoading(false);
     }
+
+    enhanceCarousels();
   }, []);
 
   return (
     <PageTemplate>
       <MainNewsContainer>
         {loading && <LoadingOverlay />}
-        {!loading && <NewsMarkdown markdownText={visibleNews} />}
+        {!loading && <DocumentMarkdown markdownText={visibleDocument} />}
       </MainNewsContainer>
-      <OtherNewsTitle>Procitaj i ostale vesti</OtherNewsTitle>
+      <Divider />
+      <OtherNewsTitle>Ostale vesti</OtherNewsTitle>
       <OtherNews news={exampleNews} limit={3} />
     </PageTemplate>
   );
 };
 
-export default NewsPage;
+export default DocumentPage;
 
 const MainNewsContainer = styled.div`
   width: 100%;
@@ -57,5 +61,19 @@ const OtherNewsTitle = styled.h3`
   width: 100%;
   text-align: center;
   margin: 0;
-  margin-top: 3rem;
+`;
+
+const Divider = styled.hr`
+  margin: 3rem;
+
+  height: 3px;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    rgba(13, 8, 96, 1) 0%,
+    #0a3b65 11%,
+    #0691aa 31%,
+    #03aac7 100%
+  );
 `;

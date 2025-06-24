@@ -7,6 +7,7 @@ import UploadImagesPopup from "../../popup/popups/UploadImagesPopup";
 import ButtonOutlined from "../../components/ButtonOutlined";
 import TopNewsPresentationPopup from "../../popup/popups/TopNewsPresentationPopup";
 import ListNewsPresentationPopup from "../../popup/popups/ListNewsPresentationPopup";
+import ListProjectsPresentationPopup from "../../popup/popups/ListProjectsPresentationPopup";
 
 const s = [
   {
@@ -17,13 +18,42 @@ const s = [
       "Nakon burne 2024. godine, ekonomisti izveštavaju o sporom, ali stabilnom padu globalne inflacije, što uliva nadu u stabilniju 2025. godinu.",
   },
 ];
-const NewsInformationEditor = ({ infoOpen, setInfoOpen }) => {
+const DocumentInformationEditor = ({
+  infoOpen,
+  setInfoOpen,
+  documentInfo,
+  onDocumentInfoChange,
+}) => {
+  const [isNews, setIsNews] = useState(true);
   const [publishOption, setPublishOption] = useState("draft");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [topImage, setTopImage] = useState();
-  const { addPopup } = usePopups();
   const [isTopNews, setIsTopNews] = useState(true);
+  const [projectDonator, setProjectDonator] = useState("");
+  const { addPopup } = usePopups();
+
+  useEffect(() => {
+    if (documentInfo) {
+      setIsNews(documentInfo.isNews);
+      setPublishOption(documentInfo.publishOption);
+      setTitle(documentInfo.title);
+      setDescription(documentInfo.description);
+      setTopImage(documentInfo.topImage);
+      setIsTopNews(documentInfo.isTopNews);
+    }
+  }, [documentInfo]);
+
+  useEffect(() => {
+    onDocumentInfoChange({
+      isNews,
+      publishOption,
+      title,
+      description,
+      topImage,
+      isTopNews,
+    });
+  }, [isNews, publishOption, title, description, topImage, isTopNews]);
 
   const openImageUploadPopup = () => {
     addPopup((key, zIndex, closePopup) => (
@@ -67,10 +97,26 @@ const NewsInformationEditor = ({ infoOpen, setInfoOpen }) => {
         newsData={[
           {
             img: topImage && topImage.src,
-            topTitle: title,
-            topDescription: description,
+            title: title,
+            description: description,
           },
         ]}
+      />
+    ));
+  };
+
+  const handleListProjectsPresentationPopup = () => {
+    addPopup((key, zIndex, closePopup) => (
+      <ListProjectsPresentationPopup
+        key={key}
+        zIndex={zIndex}
+        closePopup={closePopup}
+        projectData={{
+          img: topImage && topImage.src,
+          title,
+          description,
+          projectDonator,
+        }}
       />
     ));
   };
@@ -83,12 +129,36 @@ const NewsInformationEditor = ({ infoOpen, setInfoOpen }) => {
 
   return (
     <Container $infoOpen={infoOpen}>
-      <Title>News information</Title>
+      <Title>{isNews ? "News" : "Project"} information</Title>
 
       <MainContainer>
         <LeftContainer>
+          <SelectContainer style={{ marginBottom: "1rem" }}>
+            <RadioGroup style={{ justifyContent: "center", width: "100%" }}>
+              <label>
+                <input
+                  type="radio"
+                  name="newsOrProject"
+                  value="yes"
+                  checked={isNews}
+                  onChange={() => setIsNews(true)}
+                />
+                News
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="newsOrProject"
+                  value="no"
+                  checked={!isNews}
+                  onChange={() => setIsNews(false)}
+                />
+                Project
+              </label>
+            </RadioGroup>
+          </SelectContainer>
           <InputContainer>
-            <label>News title: </label>
+            <label>Title</label>
             <InputStyled
               placeholder="Title"
               value={title}
@@ -97,16 +167,27 @@ const NewsInformationEditor = ({ infoOpen, setInfoOpen }) => {
           </InputContainer>
 
           <InputContainer>
-            <label>Top description: </label>
+            <label>Description</label>
             <TextAreaStyled
               rows={5}
               required
               maxLength={300}
-              placeholder="Top description"
+              placeholder="Description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
           </InputContainer>
+
+          {!isNews && (
+            <InputContainer>
+              <label>Main donator</label>
+              <InputStyled
+                placeholder="Project main donator"
+                value={projectDonator}
+                onChange={(e) => setProjectDonator(e.target.value)}
+              />
+            </InputContainer>
+          )}
 
           <SelectContainer>
             <label>Publish status:</label>
@@ -126,38 +207,48 @@ const NewsInformationEditor = ({ infoOpen, setInfoOpen }) => {
               <input type="date" min={getTomorrowDateISO()} />
             </SelectContainer>
           )}
-          <SelectContainer>
-            <label>Include in Top News:</label>
-            <RadioGroup>
-              <label>
-                <input
-                  type="radio"
-                  name="topNews"
-                  value="yes"
-                  checked={isTopNews}
-                  onChange={() => setIsTopNews(true)}
-                />
-                Yes
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="topNews"
-                  value="no"
-                  checked={!isTopNews}
-                  onChange={() => setIsTopNews(false)}
-                />
-                No
-              </label>
-            </RadioGroup>
-          </SelectContainer>
+          {isNews && (
+            <SelectContainer>
+              <label>Include in Top News:</label>
+              <RadioGroup>
+                <label>
+                  <input
+                    type="radio"
+                    name="topNews"
+                    value="yes"
+                    checked={isTopNews}
+                    onChange={() => setIsTopNews(true)}
+                  />
+                  Yes
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="topNews"
+                    value="no"
+                    checked={!isTopNews}
+                    onChange={() => setIsTopNews(false)}
+                  />
+                  No
+                </label>
+              </RadioGroup>
+            </SelectContainer>
+          )}
 
           <PresentationButtonContainer>
-            <ButtonOutlined onClick={handleTopNewsPresentationPopup}>
-              View Top News Presentation
-            </ButtonOutlined>
-            <ButtonOutlined onClick={handleListNewsPresentationPopup}>
-              View List News Presentation
+            {isNews && (
+              <ButtonOutlined onClick={handleTopNewsPresentationPopup}>
+                View Top News Presentation
+              </ButtonOutlined>
+            )}
+            <ButtonOutlined
+              onClick={
+                isNews
+                  ? handleListNewsPresentationPopup
+                  : handleListProjectsPresentationPopup
+              }
+            >
+              View List {isNews ? "News" : "Project"} Presentation
             </ButtonOutlined>
           </PresentationButtonContainer>
         </LeftContainer>
@@ -175,8 +266,8 @@ const NewsInformationEditor = ({ infoOpen, setInfoOpen }) => {
             <>
               <ImageUploadIcon height={30} />
               <p>
-                Upload news top image. Top image/carousel will be shown on home
-                page and other small format news views.
+                Upload {isNews ? "news" : "project"} top image. Top image will
+                be shown on home page and other small format views.
               </p>
             </>
           )}
@@ -193,7 +284,7 @@ const NewsInformationEditor = ({ infoOpen, setInfoOpen }) => {
   );
 };
 
-export default NewsInformationEditor;
+export default DocumentInformationEditor;
 
 const Container = styled.div`
   position: absolute;
@@ -208,9 +299,9 @@ const Container = styled.div`
   padding-bottom: 2rem;
   background-color: white;
   z-index: 1000;
-  height: 450px;
+  height: 480px;
 
-  transform: translateY(${(props) => (props.$infoOpen ? "0" : "-420px")});
+  transform: translateY(${(props) => (props.$infoOpen ? "0" : "-445px")});
   transition: transform 1s ease;
 
   @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
@@ -228,7 +319,7 @@ const Container = styled.div`
 
 const MainContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   height: 100%;
 
   @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
@@ -247,7 +338,7 @@ const MainContainer = styled.div`
 const LeftContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 30%;
+  width: 35%;
   gap: 10px;
 
   @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
@@ -265,7 +356,7 @@ const ImageContainer = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
-  max-height: 360px;
+  max-height: 390px;
   text-align: center;
   cursor: ${(props) => (props.$withCursor ? "default" : "pointer")};
 

@@ -35,6 +35,7 @@ const PageContainer = styled.div`
   align-items: center;
   flex-direction: column;
   width: 100%;
+  text-align: center;
 `;
 
 const Title = styled.h3`

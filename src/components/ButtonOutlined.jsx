@@ -8,7 +8,7 @@ const ButtonOutlined = styled.button`
   border-style: solid;
   border-width: 1px;
   border-radius: 6px;
-  padding: 2px 0;
+  padding: 2px 5px;
   transition: all 0.1s linear;
   font-weight: bold;
   min-width: 10rem;

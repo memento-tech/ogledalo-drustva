@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-const NewsMarkdown = ({ markdownText }) => {
+const DocumentMarkdown = ({ markdownText }) => {
   const reactMarkdown = (
     <ReactMarkdown
       rehypePlugins={[rehypeRaw]}
@@ -92,7 +92,7 @@ const NewsMarkdown = ({ markdownText }) => {
   return <MarkdownBody id="markdown-body">{reactMarkdown}</MarkdownBody>;
 };
 
-export default NewsMarkdown;
+export default DocumentMarkdown;
 
 const MarkdownBody = styled.div`
   width: 100%;

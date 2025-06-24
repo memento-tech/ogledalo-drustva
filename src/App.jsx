@@ -6,7 +6,7 @@ import "./index.css";
 import ProjectsPage from "./pages/ProjectsPage";
 import AboutUsPage from "./pages/AboutUsPage";
 import ContactPage from "./pages/ContactPage";
-import NewsPage from "./pages/NewsPage";
+import DocumentPage from "./pages/DocumentPage";
 import ErrorPage from "./pages/ErrorPage";
 import PopupProvider from "./popup/PopupContext";
 import AdminNewsEditorPage from "./pages/admin/AdminNewsEditorPage";
@@ -23,7 +23,7 @@ function App() {
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/about-us" element={<AboutUsPage />} />
             <Route path="/contact" element={<ContactPage />} />
-            <Route path="/news" element={<NewsPage />} />
+            <Route path="/news" element={<DocumentPage />} />
             <Route path="/admin" element={<AdminNewsEditorPage />} />
             <Route path="/admin/news" element={<AdminNewsListPage />} />
             <Route path="/admin/settings" element={<AdminSettingsPage />} />

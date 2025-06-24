@@ -125,6 +125,7 @@ const NewsTextContainer = styled.div`
 const NewsTitle = styled.h3`
   margin: 0;
   padding: 0;
+  font-size: ${(props) => props.theme.fonts.medium} !important;
 
   @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
     font-size: ${(props) => props.theme.fonts.medium} !important;
