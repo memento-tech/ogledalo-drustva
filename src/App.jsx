@@ -50,7 +50,7 @@ function App() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <HashRouter>
+      <BrowserRouter>
         <PopupProvider>
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -74,7 +74,7 @@ function App() {
             <Route path="*" element={<ErrorPage />} />
           </Routes>
         </PopupProvider>
-      </HashRouter>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }
