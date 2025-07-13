@@ -15,4 +15,4 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.DEPLOY_KEY }}
-          script: /opt/ogledalo-drustva/frontend/deploy-react.sh
+          script: /opt/ogledalo-drustva/deploy-react.sh
