@@ -12,7 +12,7 @@ import AdminDocumentEditorPage from "./pages/admin/AdminDocumentEditorPage";
 import AdminDocumentListPage from "./pages/admin/AdminDocumentListPage";
 import AdminSettingsPage from "./pages/admin/AdminSettingsPage";
 import AdminPageTemplate from "./pages/admin/AdminPageTemplate";
-import { BrowserRouter, HashRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LoadingOverlay from "./components/LoadingOverlay";
 import { useEffect, useState } from "react";
 import { checkHealth } from "./adapters/HealthAdapter";
@@ -24,7 +24,6 @@ function App() {
   const [backendAvailable, setBackendAvailable] = useState(true);
   const [checking, setChecking] = useState(true);
 
-  // This example assumes you have an endpoint /api/health
   useEffect(() => {
     logEvent(analytics, "page_view", {
       firebase_screen: "HomePage",
