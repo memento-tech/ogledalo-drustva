@@ -2,35 +2,77 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo-192.png";
 import ArrowIcon from "../../icons/ArrowIcon";
+import { logout } from "../../adapters/AuthAdapter";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const SideNav = ({ sideNavOpen, setSideNavOpen }) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (sideNavOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [sideNavOpen]);
+
   return (
-    <Container $sideNavOpen={sideNavOpen}>
-      <ArrowIconContainer
-        onClick={() => setSideNavOpen(!sideNavOpen)}
-        $sideNavOpen={sideNavOpen}
-      >
-        <ArrowIcon height={20} />
-      </ArrowIconContainer>
-      <AdminPanelTitle>Admin Panel</AdminPanelTitle>
-      <LinkContainer>
-        <StyledLink to="/admin" onClick={() => setSideNavOpen(false)}>
-          Editor
-        </StyledLink>
-        <StyledLink to="/admin/news" onClick={() => setSideNavOpen(false)}>
-          All news
-        </StyledLink>
-        <StyledLink to="/admin/settings" onClick={() => setSideNavOpen(false)}>
-          Information
-        </StyledLink>
-      </LinkContainer>
-      <Logo src={logo} />
-      <CompanyName>Ogledalo drustva</CompanyName>
-    </Container>
+    <>
+      {sideNavOpen && <HolderContainer onClick={() => setSideNavOpen(false)} />}
+      <Container $sideNavOpen={sideNavOpen}>
+        <ArrowIconContainer
+          onClick={() => setSideNavOpen(!sideNavOpen)}
+          $sideNavOpen={sideNavOpen}
+        >
+          <ArrowIcon height={20} />
+        </ArrowIconContainer>
+        <AdminPanelTitle>Admin Panel</AdminPanelTitle>
+        <LinkContainer>
+          <StyledLink to="/admin" onClick={() => setSideNavOpen(false)}>
+            Editor
+          </StyledLink>
+          <StyledLink
+            to="/admin/documents"
+            onClick={() => setSideNavOpen(false)}
+          >
+            Documents
+          </StyledLink>
+          <StyledLink
+            to="/admin/settings"
+            onClick={() => setSideNavOpen(false)}
+          >
+            Information
+          </StyledLink>
+          <StyledLink
+            to="/admin"
+            onClick={() => {
+              logout();
+              navigate(0);
+            }}
+          >
+            Logout
+          </StyledLink>
+        </LinkContainer>
+        <Logo src={logo} />
+        <CompanyName>Ogledalo drustva</CompanyName>
+      </Container>
+    </>
   );
 };
 
 export default SideNav;
+
+const HolderContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: #8080805c;
+
+  z-index: 999;
+`;
 
 const Container = styled.div`
   width: 250px;
@@ -39,9 +81,12 @@ const Container = styled.div`
   border-radius: 20px;
   box-sizing: border-box;
   padding: 2rem;
-  position: fixed;
-  right: ${(props) => (props.$sideNavOpen ? "0" : "-220px")};
-  transition: right 1s ease;
+  position: absolute;
+  transform: translateX(${(props) => (props.$sideNavOpen ? "0" : "220px")});
+  right: 0;
+  transition: transform 1s ease;
+  background-color: #ffffff;
+  z-index: 1000;
 
   display: flex;
   flex-direction: column;

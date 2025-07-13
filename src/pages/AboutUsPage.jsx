@@ -3,8 +3,17 @@ import coverImage from "../assets/cover-image.webp";
 import logoLarge from "../assets/logo-512.png";
 import founterImage from "../assets/founder-image.webp";
 import PageTemplate from "./PageTemplate";
+import { analytics } from "../firebase";
+import { logEvent } from "firebase/analytics";
+import { useEffect } from "react";
 
 const AboutUsPage = () => {
+  useEffect(() => {
+    logEvent(analytics, "page_view", {
+      firebase_screen: "AboutUsPage",
+    });
+  }, []);
+
   return (
     <PageTemplate>
       <LogoAndNameContainer>

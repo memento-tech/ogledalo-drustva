@@ -9,40 +9,25 @@ import TextStyle from "@tiptap/extension-text-style";
 import styled from "styled-components";
 import TipTapEditorToolbar from "./TipTapEditorToolbar";
 import TipTapFontSize from "./components/TipTapFontSize";
-import { useRef, useState } from "react";
-import generatePDF from "react-to-pdf";
+import { useEffect, useState } from "react";
 import DocumentInformationEditor from "./components/DocumentInformationEditor";
 import { CustomImages } from "./components/ImagesComponent";
+import { getDocumentForId, saveDocument } from "../adapters/DocumentAdapter";
+import { usePopups } from "../popup/PopupContext";
+import DocumentSaveSuccessPopup from "../popup/popups/DocumentSaveSuccessPopup";
+import { useSearchParams } from "react-router-dom";
 
-const dummySavedDocument = {
-  content:
-    "<h2>Previously saved document</h2><p>This is your saved content.</p>",
-  info: {
-    title: "Saved Document Title",
-    description: "Some description for the saved document",
-  },
-};
+const initEditorHTML =
+  "<br/><br/><p>Let's be creative...</p>";
 
 const TipTapEditor = () => {
-  const [documentInfo, setDocumentInfo] = useState();
+  const { addPopup } = usePopups();
+  const [searchParams] = useSearchParams();
 
-  const loadSavedDocument = () => {
-    if (!editor) return;
-    editor.commands.setContent(dummySavedDocument.content);
-    setDocumentInfo(dummySavedDocument.info);
-  };
-
-  const saveDocument = () => {
-    let editorContent = editor.getHTML();
-    let jsonContent = editor.getJSON();
-    let textContent = editor.getText();
-
-    console.log(editorContent);
-    console.log(jsonContent);
-    console.log(textContent);
-  };
-
+  const [resetCounter, setResetCounter] = useState(0);
+  const [documentInfo, setDocumentInfo] = useState(undefined);
   const [infoOpen, setInfoOpen] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const editor = useEditor({
     extensions: [
@@ -56,20 +41,106 @@ const TipTapEditor = () => {
       TipTapFontSize,
       CustomImages,
     ],
-    content: "<p>Let's be creative...</p>",
+    content: initEditorHTML,
   });
 
-  const targetRef = useRef();
+  useEffect(() => {
+    if (!editor) return;
 
-  const handleDownloadPDF = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    let documentId = searchParams.get("documentId");
 
-    generatePDF(targetRef, {
-      filename: "page.pdf",
-      page: {
-        margin: 20,
-      },
+    if (documentId) {
+      getDocumentForId(documentId).then((result) => {
+        if (!result) {
+        } else {
+          fetch(result.contentPath)
+            .then((response) => response.text())
+            .then((text) => {
+              editor.commands.clearContent();
+              editor.commands.setContent(text, true);
+            });
+          console.log(result);
+          setDocumentInfo(result);
+          setResetCounter((c) => c + 1);
+        }
+      });
+    }
+  }, [editor]);
+
+  function makeHtmlXhtmlCompliant(html) {
+    return html
+      .replace(/<img([^>]*?)(?<!\/)>/g, "<img$1 />")
+      .replace(/<br([^>]*?)(?<!\/)>/g, "<br$1 />")
+      .replace(/<hr([^>]*?)(?<!\/)>/g, "<hr$1 />");
+  }
+
+  const onSaveDocument = (event) => {
+    event.stopPropagation();
+    if (!editor) return;
+
+    var error = validateDocumentInformation();
+
+    if (error) {
+      console.log(error);
+      setErrorMessage(error);
+      setResetCounter((c) => c + 1);
+      return;
+    }
+
+    var documentData = {
+      id: documentInfo.id,
+      documentType: documentInfo.documentType,
+      title: documentInfo.title,
+      description: documentInfo.description,
+      subDescription: documentInfo.subDescription,
+      publishStatus: documentInfo.publishStatus,
+      topContent: documentInfo.isTopNews,
+      topImageId: documentInfo.topImage?.id,
+      publishDate: documentInfo.publishDate,
+      documentContent: makeHtmlXhtmlCompliant(editor.getHTML()),
+    };
+
+    saveDocument(documentData).then((documentId) => {
+      if (documentId) {
+        addPopup((key, zIndex, closePopup) => (
+          <DocumentSaveSuccessPopup
+            key={key}
+            zIndex={zIndex}
+            closePopup={closePopup}
+            documentId={documentId}
+          />
+        ));
+      }
     });
+  };
+
+  const validateDocumentInformation = () => {
+    if (!documentInfo.title) {
+      return "Each document has to have title";
+    }
+
+    if (!documentInfo.description) {
+      return "Each document has to have description";
+    }
+
+    if (documentInfo.documentType === "NEWS" && !documentInfo.topImage) {
+      return "Each news document has to have top image";
+    }
+
+    if (
+      documentInfo.publishStatus === "PUBLISH_ON_DATE" &&
+      !documentInfo.publishDate
+    ) {
+      return "Please add publish date or change publish status";
+    }
+  };
+
+  const onClearContent = (event) => {
+    event.stopPropagation();
+    setDocumentInfo(undefined);
+    setResetCounter((c) => c + 1);
+    editor.commands.clearContent();
+    editor.commands.setContent(initEditorHTML, true);
   };
 
   return (
@@ -79,17 +150,22 @@ const TipTapEditor = () => {
         setInfoOpen={setInfoOpen}
         documentInfo={documentInfo}
         onDocumentInfoChange={setDocumentInfo}
+        resetSignal={resetCounter}
+        error={errorMessage}
       />
+
       <TipTapEditorToolbar
         editor={editor}
-        onDownloadPDF={handleDownloadPDF}
+        onSaveDocument={onSaveDocument}
+        onClearContent={onClearContent}
         onClick={() => setInfoOpen(false)}
       />
+
       <EditorContentWrapper
         $infoOpen={infoOpen}
         onClick={() => setInfoOpen(false)}
       >
-        <StyledEditorContent editor={editor} ref={targetRef} />
+        <StyledEditorContent editor={editor} />
       </EditorContentWrapper>
     </EditorWrapper>
   );

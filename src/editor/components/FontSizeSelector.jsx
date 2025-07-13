@@ -6,7 +6,7 @@ const fontSizes = ["10", "12", "14", "16", "18"];
 const FontSizeSelector = ({ editor }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentSize, setCurrentSize] = useState("16");
-  const dropdownRef = useRef();
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (e) => {

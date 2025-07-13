@@ -94,7 +94,7 @@ const ImagesComponent = ({
             {images.map((_, i) => (
               <Dot
                 key={i}
-                active={i === index}
+                $active={i === index}
                 onClick={() => handleDotClick(i)}
               />
             ))}
@@ -161,6 +161,6 @@ const Dot = styled.span`
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: ${({ active }) => (active ? "black" : "#ccc")};
+  background: ${(props) => (props.$active ? "black" : "#ccc")};
   cursor: pointer;
 `;

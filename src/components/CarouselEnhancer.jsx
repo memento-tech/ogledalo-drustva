@@ -15,11 +15,6 @@ export function enhanceCarousels() {
 
     swap();
 
-    const interval = setInterval(() => {
-      index = (index + 1) % images.length;
-      swap();
-    }, 3000);
-
     let touchStartX = 0;
     let touchEndX = 0;
 

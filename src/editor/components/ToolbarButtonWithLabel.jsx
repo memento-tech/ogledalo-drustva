@@ -6,10 +6,10 @@ const ToolbarButtonWithTooltip = ({
   label,
   children,
   onClick,
-  className,
+  className = "",
   withBorder = true,
 }) => {
-  const ref = useRef();
+  const ref = useRef(null);
   const [visible, setVisible] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
 

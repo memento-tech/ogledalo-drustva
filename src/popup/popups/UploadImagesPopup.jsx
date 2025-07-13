@@ -2,8 +2,13 @@ import styled from "styled-components";
 import ContextPopupModal from "../ContextPopupModal";
 import PopupButtons from "../components/PopupButtons";
 import { PopupMainContainer } from "../components/PopupMainContainer";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CheckedIcon from "../../icons/CheckedIcon";
+import {
+  deleteImages,
+  getAllImages,
+  uploadImage,
+} from "../../adapters/ImagesAdapter";
 
 const UploadImagesPopup = ({
   onSubmit,
@@ -11,7 +16,6 @@ const UploadImagesPopup = ({
   closePopup,
   oneImageOnly,
   presetImages,
-  availableImagesData = [],
 }) => {
   const [visibleImage, setVisibleImage] = useState(
     presetImages ? presetImages[0] : undefined
@@ -20,25 +24,45 @@ const UploadImagesPopup = ({
     presetImages ? presetImages : []
   );
   const fileInputRef = useRef();
-  const [availableImages, setAvailableImages] = useState(availableImagesData);
+  const [availableImages, setAvailableImages] = useState();
 
   const deleteImage = () => {
-    alert("delete");
-  };
+    const formData = new FormData();
+    const ids = (selectedImages || []).map((imageData) => imageData.id);
 
-  const handleFileChange = (e) => {
-    const files = Array.from(e.target.files || []);
+    formData.append("imageIds", ids);
 
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setAvailableImages((prev) => [...prev, { src: reader.result }]);
-      };
-      reader.readAsDataURL(file);
+    deleteImages(ids).then(() => {
+      fetchAllImages();
+      if (ids.includes(visibleImage.id)) {
+        setVisibleImage(undefined);
+      }
+
+      setSelectedImages([]);
     });
   };
 
-  const uploadImage = () => {
+  const handleFileChange = async (e) => {
+    const files = Array.from(e.target.files || []);
+
+    if (files.length === 0) return;
+
+    const uploadPromises = files.map((file) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      return uploadImage(formData);
+    });
+
+    await Promise.all(uploadPromises); // Waits for all uploads to finish
+
+    fetchAllImages(); // Called only after all uploads are done
+  };
+
+  const fetchAllImages = () => {
+    getAllImages().then((result) => setAvailableImages(result));
+  };
+
+  const onUploadImage = () => {
     fileInputRef.current?.click();
   };
 
@@ -70,6 +94,16 @@ const UploadImagesPopup = ({
     }
   };
 
+  useEffect(() => fetchAllImages(), []);
+
+  const getDeleteLabel = () => {
+    if (selectedImages.length > 1) {
+      return "Delete Images";
+    } else {
+      return "Delete Image";
+    }
+  };
+
   return (
     <ContextPopupModal zIndex={zIndex} onClose={closePopup}>
       <PopupMainContainer $width="600px">
@@ -85,11 +119,11 @@ const UploadImagesPopup = ({
                     : oneImageOnly
                     ? "Upload Image"
                     : "Upload Images",
-                  onClick: uploadImage,
+                  onClick: onUploadImage,
                   width: "40%",
                 },
                 {
-                  label: "Delete Image",
+                  label: getDeleteLabel(),
                   onClick: deleteImage,
                   width: "40%",
                   disabled:
@@ -114,9 +148,10 @@ const UploadImagesPopup = ({
             )}
             {availableImages &&
               availableImages.length > 0 &&
-              availableImages.map((imageData, index) => (
+              availableImages.map((imageData) => (
                 <AvailableImageContainer
                   onClick={() => addImageToSelection(imageData)}
+                  key={imageData.id}
                 >
                   {selectedImages &&
                     selectedImages.find(
@@ -126,7 +161,7 @@ const UploadImagesPopup = ({
                         <CheckedIcon />
                       </Selector>
                     )}
-                  <AvailableImage key={index} src={imageData.src} />
+                  <AvailableImage src={imageData.src} />
                 </AvailableImageContainer>
               ))}
           </AvailableImages>

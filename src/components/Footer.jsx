@@ -4,65 +4,89 @@ import linkedInLogo from "../assets/linkedin.png";
 import instagramLogo from "../assets/instagram.png";
 import facebookLogo from "../assets/facebook.png";
 import twiterXLogo from "../assets/twiterX.png";
+import { getWebsiteData } from "../adapters/WebsiteDataAdapter";
+import { useEffect, useState } from "react";
 
 const Footer = () => {
+  const [websiteData, setWebsiteData] = useState();
+
+  useEffect(() => {
+    getWebsiteData().then((data) => setWebsiteData(data));
+  }, []);
+
   return (
     <FooterContainer>
       <FooterContent>
         <ContactInfoContainer>
           <ContactInfo>Kontakt</ContactInfo>
-          <ContactInfo
-            href="https://www.google.com/maps/place/Ljubomira+Nenadovi%C4%87a+26,+Vrbica"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Adresa: Ljubomira Nenadovića br. 26, Arandjelovac
-          </ContactInfo>
-          <ContactInfo href="tel:+381692005249">
-            Telefon: +381692005249
-          </ContactInfo>
-          <ContactInfo href="mailto:odrustva@gmail.com">
-            Email: odrustva@gmail.com
-          </ContactInfo>
+          {websiteData && (
+            <>
+              <ContactInfo
+                href={websiteData.googleAddress}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Adresa: {websiteData.address}
+              </ContactInfo>
+              <ContactInfo href={"tel:" + websiteData.phoneNumber}>
+                Telefon: {websiteData.phoneNumber}
+              </ContactInfo>
+              <ContactInfo href={"mailto:" + websiteData.email}>
+                Email: {websiteData.email}
+              </ContactInfo>
+            </>
+          )}
         </ContactInfoContainer>
         <FooterCentralContent>
           <Logo src={logoLarge} />
           <LogoTitle>Ogledalo Drustva</LogoTitle>
-          <LogoTextSmall>
-            Kultura i društvo kroz objektiv istine i razumevanja.
-          </LogoTextSmall>
+          {websiteData && (
+            <LogoTextSmall>{websiteData.catchPhrase}</LogoTextSmall>
+          )}
         </FooterCentralContent>
-        <LinksContainer>
-          <a
-            href="https://www.linkedin.com/in/igor--stojanovic"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <SocialMediaLink src={facebookLogo} />
-          </a>
-          <a
-            href="https://www.instagram.com/igor____stojanovic/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <SocialMediaLink src={instagramLogo} />
-          </a>
-          <a
-            href="https://www.linkedin.com/in/igor--stojanovic"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <SocialMediaLink src={linkedInLogo} />
-          </a>
-          <a
-            href="https://www.linkedin.com/in/igor--stojanovic"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <SocialMediaLink src={twiterXLogo} />
-          </a>
-        </LinksContainer>
-        <LinksHeader>Follow us:</LinksHeader>
+        {websiteData && (
+          <>
+            <LinksContainer>
+              {websiteData.facebookLink && (
+                <a
+                  href={websiteData.facebookLink}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <SocialMediaLink src={facebookLogo} />
+                </a>
+              )}
+              {websiteData.instagramLink && (
+                <a
+                  href={websiteData.instagramLink}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <SocialMediaLink src={instagramLogo} />
+                </a>
+              )}
+              {websiteData.linkedinLink && (
+                <a
+                  href={websiteData.linkedinLink}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <SocialMediaLink src={linkedInLogo} />
+                </a>
+              )}
+              {websiteData.twitterLink && (
+                <a
+                  href={websiteData.twitterLink}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <SocialMediaLink src={twiterXLogo} />
+                </a>
+              )}
+            </LinksContainer>
+            <LinksHeader>Follow us:</LinksHeader>
+          </>
+        )}
       </FooterContent>
       <Copyright>© 2025 Memento Tech</Copyright>
     </FooterContainer>

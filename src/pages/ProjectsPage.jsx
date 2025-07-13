@@ -1,50 +1,113 @@
 import styled from "styled-components";
-import { exampleNews } from "../assets/exampleData";
-import OtherNews from "../components/OtherNews";
-import ProjectsList from "../components/ProjectsList";
 import PageTemplate from "./PageTemplate";
-
-const projectsExample = [
-  {
-    title: "Test project title",
-    description:
-      "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
-    img: "https://cdn.pixabay.com/photo/2018/08/04/11/30/draw-3583548_1280.png",
-    contractor: "Opstina Arandjelovac",
-  },
-  {
-    title: "Test project title",
-    description:
-      "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
-    img: undefined,
-    contractor: "Opstina Arandjelovac",
-  },
-  {
-    title: "Test project title",
-    description:
-      "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
-    img: "https://image-processor-storage.s3.us-west-2.amazonaws.com/images/866759932dc5358cee86f6552d1250f2/inside-bubble-spheres.jpg",
-    contractor: "Opstina Arandjelovac",
-  },
-];
+import { useEffect, useState } from "react";
+import LoadingOverlay from "../components/LoadingOverlay";
+import { getOtherNews } from "../adapters/NewsAdapter";
+import { getProjects } from "../adapters/ProjectsAdapter";
+import { analytics } from "../firebase";
+import { logEvent } from "firebase/analytics";
+import DocumentList, { DocumentText } from "../components/DocumentList";
+import { useNavigate } from "react-router";
 
 const ProjectsPage = () => {
+  let navigate = useNavigate();
+  const [loadingOtherNews, setLoadingOtherNews] = useState(true);
+  const [otherNews, setOtherNews] = useState();
+
+  const [currentPageNumber, setCurrentPageNumber] = useState(1);
+  const [numberOfPages, setNumberOfPages] = useState();
+
+  const [projects, setProjects] = useState();
+  const [loadingProjects, setLoadingProjects] = useState(true);
+
+  useEffect(() => {
+    getProjects(currentPageNumber, 12).then((pageData) => {
+      if (pageData) {
+        setProjects(pageData.data);
+        setNumberOfPages(pageData.numberOfPages);
+      }
+
+      setLoadingProjects(false);
+    });
+
+    getOtherNews(1, 3, true).then((otherNewsResponse) => {
+      setOtherNews(otherNewsResponse?.data);
+      setLoadingOtherNews(false);
+    });
+
+    logEvent(analytics, "page_view", {
+      firebase_screen: "ProjectsPage",
+    });
+  }, []);
+
+  console.log(projects);
   return (
     <PageTemplate>
-      <ProjectsList projectsData={projectsExample} />
+      <ProjectsContainer>
+        {loadingProjects && <LoadingOverlay />}
+        {projects && (
+          <DocumentList
+            documents={projects}
+            onDocumentClick={(id, contentPath) =>
+              navigate("/project?id=" + id, {
+                state: {
+                  id: id,
+                  contentPath: contentPath,
+                },
+              })
+            }
+            bluredImage={true}
+            limitPageNumbers={5}
+            currentPageNumber={currentPageNumber}
+            totalPageNumbers={numberOfPages}
+            onPageChange={setCurrentPageNumber}
+            renderExtra={(projectData) => (
+              <DocumentText>{projectData.subDescription}</DocumentText>
+            )}
+          />
+        )}
+      </ProjectsContainer>
       <Divider />
-      <OtherNewsTitle>Najnovije vesti</OtherNewsTitle>
-      <OtherNews news={exampleNews} limit={3} />
+      <OtherNewsContainer>
+        {loadingOtherNews && <LoadingOverlay />}
+        {otherNews && (
+          <>
+            <OtherNewsTitle>Ostale vesti</OtherNewsTitle>
+            <DocumentList
+              documents={otherNews}
+              onDocumentClick={(id, contentPath) =>
+                navigate("/news?id=" + id, {
+                  state: {
+                    id: id,
+                    contentPath: contentPath,
+                  },
+                })
+              }
+            />
+          </>
+        )}
+      </OtherNewsContainer>
     </PageTemplate>
   );
 };
 
 export default ProjectsPage;
 
+const ProjectsContainer = styled.div`
+  width: 100%;
+  min-height: 40vh;
+`;
+
 const OtherNewsTitle = styled.h3`
   width: 100%;
   text-align: center;
   margin: 0;
+`;
+
+const OtherNewsContainer = styled.div`
+  width: 100%;
+  position: relative;
+  min-height: 40vh;
 `;
 
 const Divider = styled.hr`

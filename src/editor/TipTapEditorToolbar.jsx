@@ -5,13 +5,13 @@ import OrderedListIcon from "../icons/OrderedListIcon";
 import BulletListIcon from "../icons/BulletListIcon";
 import LinkIcon from "../icons/LinkIcon";
 import SaveIcon from "../icons/SaveIcon";
-import DownloadIcon from "../icons/DownloadIcon";
 import ToolbarButtonWithTooltip from "./components/ToolbarButtonWithLabel";
 import FontSizeSelector from "./components/FontSizeSelector";
 import CarouselImagesIcon from "../icons/CarouselImagesIcon";
 import { usePopups } from "../popup/PopupContext";
 import UploadImagesPopup from "../popup/popups/UploadImagesPopup";
 import ImageUploadIcon from "../icons/ImageUploadIcon";
+import ClearIcon from "../icons/ClearIcon";
 
 const textAlignTypes = [
   {
@@ -28,11 +28,16 @@ const textAlignTypes = [
   },
 ];
 
-const TipTapEditorToolbar = ({ editor, onDownloadPDF, onClick }) => {
+const TipTapEditorToolbar = ({
+  editor,
+  onSaveDocument,
+  onClearContent,
+  onClick,
+}) => {
   const { addPopup } = usePopups();
 
-  const [textAlignCounter, setTextAlignCounter] = useState(0);
-  const [textAlignIconData, setTextAlignIconData] = useState(textAlignTypes[0]);
+  const [textAlignIndex, setTextAlignIndex] = useState(0);
+  const textAlignIconData = textAlignTypes[textAlignIndex];
 
   const [boldActive, setBoldActive] = useState(false);
   const [italicActive, setItalicActive] = useState(false);
@@ -56,6 +61,7 @@ const TipTapEditorToolbar = ({ editor, onDownloadPDF, onClick }) => {
         zIndex={zIndex}
         closePopup={closePopup}
         oneImageOnly={oneImageOnly}
+        presetImages={undefined}
       />
     ));
   };
@@ -89,66 +95,74 @@ const TipTapEditorToolbar = ({ editor, onDownloadPDF, onClick }) => {
   }, []);
 
   useEffect(() => {
+    if (!editor) return;
     editor
       .chain()
       .focus()
       .setTextAlign(textAlignIconData.label)
       .updateAttributes("images", { textAlign: textAlignIconData.label })
       .run();
-  }, [textAlignIconData]);
+  }, [textAlignIndex]);
 
   useEffect(() => {
-    setTextAlignIconData(textAlignTypes[textAlignCounter]);
-  }, [textAlignCounter]);
+    if (!editor) return;
 
-  useEffect(() => {
-    setBoldActive(editor.isActive("bold"));
-    setUnderlineActive(editor.isActive("underline"));
-    setItalicActive(editor.isActive("italic"));
-    setLevelOneHeadingActive(editor.isActive("heading", { level: 1 }));
-    setLevelTwoHeadingActive(editor.isActive("heading", { level: 2 }));
-    setLevelThreeHeadingActive(editor.isActive("heading", { level: 3 }));
+    const updateToolbarStates = () => {
+      setBoldActive(editor.isActive("bold"));
+      setUnderlineActive(editor.isActive("underline"));
+      setItalicActive(editor.isActive("italic"));
+      setLevelOneHeadingActive(editor.isActive("heading", { level: 1 }));
+      setLevelTwoHeadingActive(editor.isActive("heading", { level: 2 }));
+      setLevelThreeHeadingActive(editor.isActive("heading", { level: 3 }));
 
-    var currentTextAlign = editor.isActive({ textAlign: "left" })
-      ? "left"
-      : editor.isActive({ textAlign: "center" })
-      ? "center"
-      : editor.isActive({ textAlign: "right" })
-      ? "right"
-      : "center";
-    if (currentTextAlign) {
-      var currentTextAlignIndex = textAlignTypes.findIndex(
+      const currentTextAlign = editor.isActive({ textAlign: "left" })
+        ? "left"
+        : editor.isActive({ textAlign: "center" })
+        ? "center"
+        : editor.isActive({ textAlign: "right" })
+        ? "right"
+        : "left";
+
+      const currentTextAlignIndex = textAlignTypes.findIndex(
         (data) => data.label === currentTextAlign
       );
-      setTextAlignCounter(currentTextAlignIndex);
-    }
-  }, [
-    editor,
-    editor.isActive("bold"),
-    editor.isActive("italic"),
-    editor.isActive("underline"),
-    editor.isActive("heading", { level: 1 }),
-    editor.isActive("heading", { level: 2 }),
-    editor.isActive("heading", { level: 3 }),
-    editor.isActive({ textAlign: "left" }),
-    editor.isActive({ textAlign: "center" }),
-    editor.isActive({ textAlign: "right" }),
-  ]);
+
+      setTextAlignIndex((prev) =>
+        currentTextAlignIndex !== -1 && currentTextAlignIndex !== prev
+          ? currentTextAlignIndex
+          : prev
+      );
+    };
+
+    updateToolbarStates();
+
+    editor.on("transaction", updateToolbarStates);
+
+    return () => {
+      editor.off("transaction", updateToolbarStates);
+    };
+  }, [editor]);
 
   if (!editor) return null;
 
   return (
     <ToolbarWrapper onClick={onClick}>
-      <ToolbarButtonWithTooltip label={"Save content"} withBorder={false}>
+      <ToolbarButtonWithTooltip
+        label={"Save content"}
+        withBorder={false}
+        onClick={onSaveDocument}
+      >
         <SaveIcon height={20} />
       </ToolbarButtonWithTooltip>
+
       <ToolbarButtonWithTooltip
-        onClick={onDownloadPDF}
-        label={"Download PDF version"}
+        label={"Clear content"}
         withBorder={false}
+        onClick={onClearContent}
       >
-        <DownloadIcon height={20} />
+        <ClearIcon height={20} />
       </ToolbarButtonWithTooltip>
+
       <hr
         style={{
           width: "100%",
@@ -158,6 +172,7 @@ const TipTapEditorToolbar = ({ editor, onDownloadPDF, onClick }) => {
           margin: 0,
         }}
       />
+
       <FontSizeSelector editor={editor} />
 
       <ToolbarButtonWithTooltip
@@ -210,11 +225,7 @@ const TipTapEditorToolbar = ({ editor, onDownloadPDF, onClick }) => {
 
       <ToolbarButtonWithTooltip
         onClick={() =>
-          setTextAlignCounter(
-            textAlignCounter + 1 >= textAlignTypes.length
-              ? 0
-              : textAlignCounter + 1
-          )
+          setTextAlignIndex((prev) => (prev + 1) % textAlignTypes.length)
         }
         label={"Align text"}
         withBorder={false}

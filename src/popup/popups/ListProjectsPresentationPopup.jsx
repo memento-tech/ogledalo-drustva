@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import ProjectsList from "../../components/ProjectsList";
 import ContextPopupModal from "../ContextPopupModal";
 import { PopupMainContainer } from "../components/PopupMainContainer";
+import DocumentList from "../../components/DocumentList";
 
 const ListProjectsPresentationPopup = ({ zIndex, closePopup, projectData }) => {
   return (
@@ -11,7 +11,14 @@ const ListProjectsPresentationPopup = ({ zIndex, closePopup, projectData }) => {
         <Label>
           This is how the end user will see this news in list news on Home Page
         </Label>
-        <ProjectsList projectsData={[projectData]} presentational={true} />
+        {projectData && (
+          <DocumentList
+            documents={[projectData]}
+            onDocumentClick={() => {}}
+            bluredImage={true}
+            presentational={true}
+          />
+        )}
       </PopupMainContainer>
     </ContextPopupModal>
   );

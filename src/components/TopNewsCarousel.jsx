@@ -12,38 +12,50 @@ const TopNewsCarousel = ({ news = [] }) => {
   const touchEndX = useRef(null);
   const navigate = useNavigate();
 
-  const isDotActive = (newsId) => visibleNews.id === newsId;
-
-  const resetInterval = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(goToNextSlide, 4000);
-  };
-
-  useEffect(() => {
-    resetInterval();
-    return () => clearInterval(intervalRef.current);
-  }, []);
+  const isDotActive = (newsId) => visibleNews?.id === newsId;
 
   const goToNextSlide = () => {
     setCounter((prev) => (prev + 1) % displayableNews.length);
-    resetInterval();
   };
 
   const goToPreviousSlide = () => {
     setCounter(
       (prev) => (prev - 1 + displayableNews.length) % displayableNews.length
     );
-    resetInterval();
   };
 
   const selectSlide = (index) => {
     setCounter(index);
-    resetInterval();
   };
+
+  useEffect(() => {
+    intervalRef.current = setInterval(goToNextSlide, 4000);
+    return () => clearInterval(intervalRef.current);
+  }, [displayableNews.length]);
 
   useEffect(() => {
     if (news?.length > 0) setVisibleNews(displayableNews[counter]);
   }, [displayableNews, counter, news]);
+
+  const resetInterval = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(goToNextSlide, 4000);
+  };
+
+  const handleNextClick = () => {
+    goToNextSlide();
+    resetInterval();
+  };
+
+  const handlePreviousClick = () => {
+    goToPreviousSlide();
+    resetInterval();
+  };
+
+  const handleDotClick = (index) => {
+    selectSlide(index);
+    resetInterval();
+  };
 
   const handleTouchStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
@@ -56,9 +68,9 @@ const TopNewsCarousel = ({ news = [] }) => {
   const handleTouchEnd = () => {
     if (!touchStartX.current || !touchEndX.current) return;
     const distance = touchStartX.current - touchEndX.current;
-    Math.abs(distance) > 50 && distance > 0
-      ? goToNextSlide()
-      : goToPreviousSlide();
+    if (Math.abs(distance) > 50) {
+      distance > 0 ? handleNextClick() : handlePreviousClick();
+    }
     touchStartX.current = null;
     touchEndX.current = null;
   };
@@ -68,18 +80,22 @@ const TopNewsCarousel = ({ news = [] }) => {
   return (
     <CarouselContainer>
       <TopNewsContainer
-        onClick={() => navigate("/news?id=" + visibleNews.id)}
+        onClick={() =>
+          navigate("/news?id=" + visibleNews.id, {
+            state: { id: visibleNews.id, contentPath: visibleNews.contentPath },
+          })
+        }
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         $imagePresent={
-          visibleNews.img !== null && visibleNews.img !== undefined
+          visibleNews.topImage !== null && visibleNews.topImage !== undefined
         }
       >
-        <CarouselImage src={visibleNews.img} alt="No image found" />
+        <CarouselImage src={visibleNews.topImage?.src} alt="No image found" />
         <CarouselTextContainer>
-          <TopNewsTitle>{visibleNews.topTitle}</TopNewsTitle>
-          <TopNewsText>{visibleNews.topDescription}</TopNewsText>
+          <TopNewsTitle>{visibleNews.title}</TopNewsTitle>
+          <TopNewsText>{visibleNews.description}</TopNewsText>
         </CarouselTextContainer>
         <ReadMoreLink className="scalableOnHover">read more →</ReadMoreLink>
       </TopNewsContainer>
@@ -90,17 +106,17 @@ const TopNewsCarousel = ({ news = [] }) => {
             <DotStyled
               key={index}
               className={isDotActive(newsData.id) ? "active" : ""}
-              onClick={() => selectSlide(index)}
+              onClick={() => handleDotClick(index)}
             />
           ))}
         </TopNewsCounterDots>
       )}
 
-      <LeftArrowNav onClick={goToPreviousSlide}>
+      <LeftArrowNav onClick={handlePreviousClick}>
         <ArrowIcon height={50} />
       </LeftArrowNav>
 
-      <RightArrowNav onClick={goToNextSlide}>
+      <RightArrowNav onClick={handleNextClick}>
         <ArrowIcon height={50} />
       </RightArrowNav>
     </CarouselContainer>
@@ -138,10 +154,8 @@ const CarouselContainer = styled.div`
 
   position: relative;
 
-  &:hover {
-    .scalableOnHover {
-      scale: 1.1;
-    }
+  & > div:hover .scalableOnHover {
+    scale: 1.1;
   }
 `;
 

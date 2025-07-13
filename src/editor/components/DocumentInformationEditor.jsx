@@ -23,37 +23,77 @@ const DocumentInformationEditor = ({
   setInfoOpen,
   documentInfo,
   onDocumentInfoChange,
+  resetSignal,
+  error,
 }) => {
+  const { addPopup } = usePopups();
+
+  const [id, setId] = useState();
   const [isNews, setIsNews] = useState(true);
-  const [publishOption, setPublishOption] = useState("draft");
+  const [publishStatus, setPublishStatus] = useState("DRAFT");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [topImage, setTopImage] = useState();
   const [isTopNews, setIsTopNews] = useState(true);
   const [projectDonator, setProjectDonator] = useState("");
-  const { addPopup } = usePopups();
+  const [publishDate, setPublishDate] = useState();
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
+    setPublishDate(getTomorrowDateISO());
+
     if (documentInfo) {
-      setIsNews(documentInfo.isNews);
-      setPublishOption(documentInfo.publishOption);
-      setTitle(documentInfo.title);
-      setDescription(documentInfo.description);
-      setTopImage(documentInfo.topImage);
-      setIsTopNews(documentInfo.isTopNews);
+      setId(documentInfo.id || undefined);
+      setIsNews(documentInfo.isNews || true);
+      setPublishStatus(documentInfo.publisStatus || "DRAFT");
+      setTitle(documentInfo.title || "");
+      setDescription(documentInfo.description || "");
+      setTopImage(documentInfo.topImage || undefined);
+      setIsTopNews(documentInfo.isTopNews || true);
+      setProjectDonator(documentInfo.projectDonator || "");
+      setPublishDate(documentInfo.publishDate);
     }
-  }, [documentInfo]);
+  }, []);
+
+  useEffect(() => {
+    setErrorMessage(error);
+  }, [error]);
+
+  useEffect(() => {
+    setId(undefined);
+    setIsNews(true);
+    setPublishStatus("DRAFT");
+    setTitle("");
+    setDescription("");
+    setTopImage(undefined);
+    setIsTopNews(true);
+    setProjectDonator("");
+
+    if (documentInfo) {
+      setId(documentInfo.id || undefined);
+      setIsNews(documentInfo.isNews || true);
+      setPublishStatus(documentInfo.publisStatus || "DRAFT");
+      setTitle(documentInfo.title || "");
+      setDescription(documentInfo.description || "");
+      setTopImage(documentInfo.topImage || undefined);
+      setIsTopNews(documentInfo.isTopNews || true);
+      setProjectDonator(documentInfo.projectDonator || "");
+    }
+  }, [resetSignal]);
 
   useEffect(() => {
     onDocumentInfoChange({
-      isNews,
-      publishOption,
+      id: id,
+      documentType: isNews ? "NEWS" : "PROJECT",
       title,
       description,
+      subDescription: projectDonator,
+      publishStatus,
+      publishDate: publishStatus === "PUBLISH_ON_DATE" ? publishDate : null,
       topImage,
       isTopNews,
     });
-  }, [isNews, publishOption, title, description, topImage, isTopNews]);
+  }, [isNews, publishStatus, title, description, topImage, isTopNews]);
 
   const openImageUploadPopup = () => {
     addPopup((key, zIndex, closePopup) => (
@@ -157,6 +197,9 @@ const DocumentInformationEditor = ({
               </label>
             </RadioGroup>
           </SelectContainer>
+
+          <ErrorLabel>{errorMessage}</ErrorLabel>
+
           <InputContainer>
             <label>Title</label>
             <InputStyled
@@ -192,19 +235,23 @@ const DocumentInformationEditor = ({
           <SelectContainer>
             <label>Publish status:</label>
             <select
-              value={publishOption}
-              onChange={(e) => setPublishOption(e.target.value)}
+              value={publishStatus}
+              onChange={(e) => setPublishStatus(e.target.value)}
             >
-              <option value="draft">DRAFT</option>
-              <option value="now">PUBLISH NOW</option>
-              <option value="onDate">PUBLISH ON DATE</option>
+              <option value="DRAFT">DRAFT</option>
+              <option value="PUBLISHED">PUBLISH NOW</option>
+              <option value="PUBLISH_ON_DATE">PUBLISH ON DATE</option>
             </select>
           </SelectContainer>
 
-          {publishOption === "onDate" && (
+          {publishStatus === "PUBLISH_ON_DATE" && (
             <SelectContainer>
               <label>Publish date: </label>
-              <input type="date" min={getTomorrowDateISO()} />
+              <input
+                type="date"
+                min={getTomorrowDateISO()}
+                onChange={(e) => setPublishDate(e.target.value)}
+              />
             </SelectContainer>
           )}
           {isNews && (
@@ -298,10 +345,10 @@ const Container = styled.div`
   width: calc(100% - 40px);
   padding-bottom: 2rem;
   background-color: white;
-  z-index: 1000;
+  z-index: 998;
   height: 480px;
 
-  transform: translateY(${(props) => (props.$infoOpen ? "0" : "-445px")});
+  transform: translateY(${(props) => (props.$infoOpen ? "0" : "-450px")});
   transition: transform 1s ease;
 
   @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
@@ -499,4 +546,13 @@ const RadioGroup = styled.div`
   input[type="radio"] {
     cursor: pointer;
   }
+`;
+
+const ErrorLabel = styled.p`
+  width: 100%;
+  text-align: center;
+  font-size: 13px;
+  color: red;
+  margin: 0;
+  transform: translateY(-20px);
 `;

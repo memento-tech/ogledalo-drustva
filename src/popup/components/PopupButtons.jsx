@@ -7,7 +7,7 @@ const PopupButtons = ({ width = "100%", buttons }) => {
     <Container style={{ width: width }}>
       {buttons.map((button, index) => (
         <ButtonOutlined
-          index={index}
+          key={index}
           onClick={button.onClick}
           style={{ minWidth: button.width ? button.width : "" }}
           disabled={button.disabled ? "true" : ""}

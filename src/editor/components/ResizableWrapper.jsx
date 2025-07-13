@@ -1,9 +1,9 @@
 import { NodeViewWrapper } from "@tiptap/react";
 import styled from "styled-components";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 const ResizableWrapper = ({ node, updateAttributes, children }) => {
-  const resizerRef = useRef();
+  const resizerRef = useRef(null);
 
   const startResize = (e) => {
     e.preventDefault();

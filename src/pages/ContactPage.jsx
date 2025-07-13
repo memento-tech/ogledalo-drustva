@@ -1,8 +1,17 @@
 import styled from "styled-components";
 import ContactUsForm from "../components/ContactUsForm";
 import PageTemplate from "./PageTemplate";
+import { analytics } from "../firebase";
+import { logEvent } from "firebase/analytics";
+import { useEffect } from "react";
 
 const ContactPage = () => {
+  useEffect(() => {
+    logEvent(analytics, "page_view", {
+      firebase_screen: "ContactPage",
+    });
+  }, []);
+
   return (
     <PageTemplate>
       <PageContainer>

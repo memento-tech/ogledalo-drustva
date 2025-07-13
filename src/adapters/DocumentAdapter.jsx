@@ -1,0 +1,82 @@
+import { HttpStatusCode } from "axios";
+import API from "./API";
+
+export const saveDocument = (documentData) => {
+  return API.post("/api/document/save", documentData)
+    .then((response) => {
+      if (response.data) {
+        return response.data;
+      }
+      console.error("Something went wrong, document ID is not returned.");
+    })
+    .catch((error) => {
+      console.error(error.data.errorCode);
+    });
+};
+
+export const downloadPDFDocument = async (documentId) => {
+  try {
+    const response = await API.get(
+      "/api/document/generatePDF?documentId=" + documentId,
+      {
+        responseType: "blob",
+        headers: {
+          Accept: "application/pdf",
+        },
+      }
+    );
+
+    const blob = new Blob([response.data], { type: "application/pdf" });
+
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = "document.pdf";
+    link.click();
+  } catch (error) {
+    console.error("Error downloading PDF:", error);
+  }
+};
+
+export const getAllDocuments = (pageNumber) => {
+  return API.get("/api/document/all?pageNumber=" + pageNumber)
+    .then((response) => {
+      if (response.data) {
+        return response.data;
+      }
+      console.error("Something went wrong, document ID is not returned.");
+      return undefined;
+    })
+    .catch((error) => {
+      console.error(error.data.errorCode);
+      return undefined;
+    });
+};
+
+export const getDocumentForId = (documentId) => {
+  return API.get("/api/document?documentId=" + documentId)
+    .then((response) => {
+      if (response.data) {
+        return response.data;
+      }
+      console.error("Something went wrong, document ID is not returned.");
+      return undefined;
+    })
+    .catch((error) => {
+      console.error(error.data.errorCode);
+      return undefined;
+    });
+};
+
+export const deleteDocument = (documentId) => {
+  return API.get("/api/document/delete?documentId=" + documentId)
+    .then((response) => {
+      if (response.status === HttpStatusCode.Ok) {
+        return true;
+      }
+      return false;
+    })
+    .catch((error) => {
+      console.error(error.data.errorCode);
+      return false;
+    });
+};
