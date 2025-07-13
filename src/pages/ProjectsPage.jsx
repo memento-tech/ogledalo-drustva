@@ -40,7 +40,6 @@ const ProjectsPage = () => {
     });
   }, []);
 
-  console.log(projects);
   return (
     <PageTemplate>
       <ProjectsContainer>
