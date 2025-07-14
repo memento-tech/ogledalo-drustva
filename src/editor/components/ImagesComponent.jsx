@@ -33,8 +33,9 @@ export const CustomImages = Node.create({
         getAttrs: (dom) => {
           const dataImages = dom.getAttribute("data-images");
           const textAlign = dom.style.textAlign || "center";
-          const width = dom.style.width || "400px";
-          const height = dom.style.height || "300px";
+          const imgTag = dom.getElementsByTagName("img")[0];
+          const width = imgTag.style.width || "400px";
+          const height = imgTag.style.height || "300px";
 
           return {
             images: dataImages ? JSON.parse(dataImages) : [],
@@ -55,9 +56,15 @@ export const CustomImages = Node.create({
       {
         class: "carousel",
         "data-images": JSON.stringify(images),
-        style: `text-align: ${textAlign}; width: ${width}; height: ${height}`,
+        style: `text-align: ${textAlign}; width: 100%; height: auto`,
       },
-      ...images.map((img) => ["img", { src: img.src }]),
+      ...images.map((img) => [
+        "img",
+        {
+          src: img.src,
+          style: `width: ${width}; height: ${height}; object-fit: cover; border-radius: 10px;`,
+        },
+      ]),
     ];
   },
 
@@ -90,8 +97,18 @@ const ImagesComponent = ({
   const handleDotClick = (i) => setIndex(i);
 
   return (
-    <NodeViewWrapper as={AlignWrapper} $align={textAlign}>
-      <ResizableBox style={{ width, height }}>
+    <NodeViewWrapper
+      as={AlignWrapper}
+      style={{
+        justifyContent:
+          textAlign === "left"
+            ? "flex-start"
+            : textAlign === "right"
+            ? "flex-end"
+            : "center",
+      }}
+    >
+      <ResizableBox className="res" style={{ width, height }}>
         <ImageWrapper>
           {images[index] && <CarouselImage src={images[index].src} />}
           <EditButton
@@ -124,15 +141,8 @@ const ImagesComponent = ({
 
 export default ImagesComponent;
 
-// Styled components
 const AlignWrapper = styled.div`
   display: flex;
-  justify-content: ${({ $align }) =>
-    $align === "left"
-      ? "flex-start"
-      : $align === "right"
-      ? "flex-end"
-      : "center"};
 `;
 
 const ResizableBox = styled.div`

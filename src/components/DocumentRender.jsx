@@ -68,6 +68,10 @@ const MainDocumentContainer = styled.div`
   width: 100%;
   position: relative;
   min-height: 40vh;
+
+  .carousel img {
+    max-width: 100%;
+  }
 `;
 
 const ContentContainer = styled.div`
