@@ -27,7 +27,24 @@ export const CustomImages = Node.create({
   },
 
   parseHTML() {
-    return [{ tag: "div.carousel" }];
+    return [
+      {
+        tag: "div.carousel",
+        getAttrs: (dom) => {
+          const dataImages = dom.getAttribute("data-images");
+          const textAlign = dom.style.textAlign || "center";
+          const width = dom.style.width || "400px";
+          const height = dom.style.height || "300px";
+
+          return {
+            images: dataImages ? JSON.parse(dataImages) : [],
+            textAlign,
+            width,
+            height,
+          };
+        },
+      },
+    ];
   },
 
   renderHTML({ HTMLAttributes }) {
@@ -76,7 +93,7 @@ const ImagesComponent = ({
     <NodeViewWrapper as={AlignWrapper} $align={textAlign}>
       <ResizableBox style={{ width, height }}>
         <ImageWrapper>
-          <CarouselImage src={images[index].src} />
+          {images[index] && <CarouselImage src={images[index].src} />}
           <EditButton
             onClick={() =>
               handleImageUpdatePopup(

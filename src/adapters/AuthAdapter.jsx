@@ -23,7 +23,6 @@ export const checkLoggedIn = () => {
       return false;
     })
     .catch((error) => {
-      console.log("1233");
       logout();
       console.error(error.data.errorCode);
       return false;

@@ -17,8 +17,7 @@ import { usePopups } from "../popup/PopupContext";
 import DocumentSaveSuccessPopup from "../popup/popups/DocumentSaveSuccessPopup";
 import { useSearchParams } from "react-router-dom";
 
-const initEditorHTML =
-  "<br/><br/><p>Let's be creative...</p>";
+const initEditorHTML = "<br/><br/><p>Let's be creative...</p>";
 
 const TipTapEditor = () => {
   const { addPopup } = usePopups();
@@ -59,7 +58,6 @@ const TipTapEditor = () => {
               editor.commands.clearContent();
               editor.commands.setContent(text, true);
             });
-          console.log(result);
           setDocumentInfo(result);
           setResetCounter((c) => c + 1);
         }
