@@ -9,6 +9,7 @@ import {
   getAllImages,
   uploadImage,
 } from "../../adapters/ImagesAdapter";
+import LoadingOverlay from "../../components/LoadingOverlay";
 
 const UploadImagesPopup = ({
   onSubmit,
@@ -17,6 +18,7 @@ const UploadImagesPopup = ({
   oneImageOnly,
   presetImages,
 }) => {
+  const [loading, setLoading] = useState(false);
   const [visibleImage, setVisibleImage] = useState(
     presetImages ? presetImages[0] : undefined
   );
@@ -43,6 +45,7 @@ const UploadImagesPopup = ({
   };
 
   const handleFileChange = async (e) => {
+    setLoading(true);
     const files = Array.from(e.target.files || []);
 
     if (files.length === 0) return;
@@ -56,6 +59,7 @@ const UploadImagesPopup = ({
     await Promise.all(uploadPromises); // Waits for all uploads to finish
 
     fetchAllImages(); // Called only after all uploads are done
+    setLoading(false);
   };
 
   const fetchAllImages = () => {
@@ -107,6 +111,12 @@ const UploadImagesPopup = ({
   return (
     <ContextPopupModal zIndex={zIndex} onClose={closePopup}>
       <PopupMainContainer $width="600px">
+        {loading && (
+          <LoadingOverlay
+            masked={true}
+            text={"Waiting until images are uploaded."}
+          />
+        )}
         Image Upload
         <Container>
           <ImageUploadContainer>

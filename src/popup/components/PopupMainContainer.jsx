@@ -15,4 +15,5 @@ export const PopupMainContainer = styled.div`
   padding: 5px;
   height: 100%;
   padding-top: 1rem;
+  position: relative;
 `;

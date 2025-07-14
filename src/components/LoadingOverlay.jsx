@@ -1,8 +1,9 @@
 import styled from "styled-components";
 
-const LoadingOverlay = () => {
+const LoadingOverlay = ({ masked = false, text = undefined }) => {
   return (
-    <LoadingContainer>
+    <LoadingContainer $masked={masked}>
+      {text && <LoadingText>{text}</LoadingText>}
       <LoadingDots />
     </LoadingContainer>
   );
@@ -14,14 +15,27 @@ const LoadingContainer = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  z-index: 1000;
+  z-index: 1001;
 
   top: 0;
   left: 0;
 
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  border-radius: 5px;
+  background-color: ${(props) => (props.$masked ? "#f0f0f0ae" : "")};
+`;
+
+const LoadingText = styled.p`
+  font-size: 14px;
+  background-color: #f0f0f0eb;
+  padding: 10px;
+  margin: 0;
+  margin-bottom: 5px;
+  font-style: italic;
 `;
 
 const LoadingDots = styled.div`
