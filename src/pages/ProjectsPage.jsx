@@ -8,6 +8,7 @@ import { analytics } from "../firebase";
 import { logEvent } from "firebase/analytics";
 import DocumentList, { DocumentText } from "../components/DocumentList";
 import { useNavigate } from "react-router";
+import { getDocumentUrlSegment } from "../adapters/DocumentAdapter";
 
 const ProjectsPage = () => {
   let navigate = useNavigate();
@@ -74,8 +75,8 @@ const ProjectsPage = () => {
             <OtherNewsTitle>Ostale vesti</OtherNewsTitle>
             <DocumentList
               documents={otherNews}
-              onDocumentClick={(id, contentPath) =>
-                navigate("/news?id=" + id, {
+              onDocumentClick={(title, id, contentPath) =>
+                navigate("/news/" + getDocumentUrlSegment(title, id), {
                   state: {
                     id: id,
                     contentPath: contentPath,

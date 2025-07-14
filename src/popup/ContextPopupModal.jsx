@@ -95,6 +95,7 @@ const XCloseButton = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
+  z-index: 1005;
 
   &:hover {
     scale: 1.8;

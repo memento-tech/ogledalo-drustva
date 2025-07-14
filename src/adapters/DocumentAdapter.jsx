@@ -80,3 +80,21 @@ export const deleteDocument = (documentId) => {
       return false;
     });
 };
+
+export const getDocumentUrlSegment = (title, id) => {
+  const slug = slugify(title);
+  const urlSegment = `${slug}_withId_${id}`;
+  return urlSegment;
+};
+
+export function slugify(text) {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
+}

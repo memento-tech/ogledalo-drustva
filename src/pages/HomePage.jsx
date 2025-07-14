@@ -7,6 +7,7 @@ import { analytics } from "../firebase";
 import { logEvent } from "firebase/analytics";
 import { useNavigate } from "react-router";
 import DocumentList from "../components/DocumentList";
+import { getDocumentUrlSegment } from "../adapters/DocumentAdapter";
 
 const HomePage = () => {
   let navigate = useNavigate();
@@ -33,8 +34,8 @@ const HomePage = () => {
         <TopNewsCarousel news={topNews} />
         <DocumentList
           documents={otherNews}
-          onDocumentClick={(id, contentPath) =>
-            navigate("/news?id=" + id, {
+          onDocumentClick={(title, id, contentPath) =>
+            navigate("/news/" + getDocumentUrlSegment(title, id), {
               state: {
                 id: id,
                 contentPath: contentPath,

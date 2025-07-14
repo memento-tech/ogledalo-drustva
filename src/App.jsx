@@ -56,8 +56,8 @@ function App() {
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/about-us" element={<AboutUsPage />} />
             <Route path="/contact" element={<ContactPage />} />
-            <Route path="/news" element={<DocumentViewPage />} />
-            <Route path="/project" element={<DocumentViewPage />} />
+            <Route path="/news/:titleId" element={<DocumentViewPage />} />
+            <Route path="/project/:titleId" element={<DocumentViewPage />} />
             <Route
               path="/admin"
               element={withAdminTemplate(<AdminDocumentEditorPage />)}

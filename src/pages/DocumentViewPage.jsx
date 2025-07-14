@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import LoadingOverlay from "../components/LoadingOverlay";
 import PageTemplate from "./PageTemplate";
@@ -8,16 +8,19 @@ import DocumentRender from "../components/DocumentRender";
 import { analytics } from "../firebase";
 import { logEvent } from "firebase/analytics";
 import DocumentList from "../components/DocumentList";
+import { getDocumentUrlSegment } from "../adapters/DocumentAdapter";
 
 const DocumentViewPage = () => {
   let navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const { titleId } = useParams();
 
   const [loadingOtherNews, setLoadingOtherNews] = useState(true);
   const [otherNews, setOtherNews] = useState();
 
+  const id = titleId.substring(titleId.lastIndexOf("_withId_") + 8);
+
   useEffect(() => {
-    getOtherNews(1, 3, true, searchParams.get("id")).then((otherNews) => {
+    getOtherNews(1, 3, true, id).then((otherNews) => {
       setOtherNews(otherNews.data);
       setLoadingOtherNews(false);
     });
@@ -30,8 +33,8 @@ const DocumentViewPage = () => {
   return (
     <PageTemplate>
       <DocumentRender
-        documentId={searchParams.get("id")}
-        getValidDocumentForId={() => getNewsForId(searchParams.get("id"))}
+        documentId={id}
+        getValidDocumentForId={() => getNewsForId(id)}
         errorMessage={"No news were found with provided ID, please check URL"}
       />
       <Divider />
@@ -42,8 +45,8 @@ const DocumentViewPage = () => {
             <OtherNewsTitle>Ostale vesti</OtherNewsTitle>
             <DocumentList
               documents={otherNews}
-              onDocumentClick={(id, contentPath) =>
-                navigate("/news?id=" + id, {
+              onDocumentClick={(title, id, contentPath) =>
+                navigate("/news/" + getDocumentUrlSegment(title, id), {
                   state: {
                     id: id,
                     contentPath: contentPath,

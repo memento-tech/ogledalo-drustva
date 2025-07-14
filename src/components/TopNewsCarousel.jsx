@@ -2,6 +2,7 @@ import styled from "styled-components";
 import ArrowIcon from "../icons/ArrowIcon";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getDocumentUrlSegment } from "../adapters/DocumentAdapter";
 
 const TopNewsCarousel = ({ news = [] }) => {
   const displayableNews = news.slice(0, 5);
@@ -81,9 +82,15 @@ const TopNewsCarousel = ({ news = [] }) => {
     <CarouselContainer>
       <TopNewsContainer
         onClick={() =>
-          navigate("/news?id=" + visibleNews.id, {
-            state: { id: visibleNews.id, contentPath: visibleNews.contentPath },
-          })
+          navigate(
+            "/news/" + getDocumentUrlSegment(visibleNews.title, visibleNews.id),
+            {
+              state: {
+                id: visibleNews.id,
+                contentPath: visibleNews.contentPath,
+              },
+            }
+          )
         }
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}

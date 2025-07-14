@@ -18,7 +18,11 @@ const DocumentList = ({
         <DocumentCard
           key={index}
           onClick={() =>
-            onDocumentClick(documentData.id, documentData.contentPath)
+            onDocumentClick(
+              documentData.title,
+              documentData.id,
+              documentData.contentPath
+            )
           }
           $presentational={presentational}
         >
