@@ -20,7 +20,7 @@ const DocumentViewPage = () => {
   const id = titleId.substring(titleId.lastIndexOf("_withId_") + 8);
 
   useEffect(() => {
-    getOtherNews(1, 3, true, id).then((otherNews) => {
+    getOtherNews(1, 1, true, id).then((otherNews) => {
       setOtherNews(otherNews.data);
       setLoadingOtherNews(false);
     });
@@ -67,6 +67,10 @@ const OtherNewsContainer = styled.div`
   width: 100%;
   position: relative;
   min-height: 40vh;
+
+  @media screen and (max-width: ${(props) => props.theme.screen.small}) {
+    margin-bottom: 7rem;
+  }
 `;
 
 const OtherNewsTitle = styled.h3`

@@ -68,6 +68,7 @@ const MainDocumentContainer = styled.div`
   width: 100%;
   position: relative;
   min-height: 40vh;
+  margin-top: 2rem;
 
   .carousel img {
     max-width: 100%;

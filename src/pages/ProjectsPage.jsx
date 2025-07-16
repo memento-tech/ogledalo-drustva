@@ -43,7 +43,7 @@ const ProjectsPage = () => {
 
   return (
     <PageTemplate>
-      <ProjectsContainer>
+      <ProjectsContainer $projectsFound={!loadingProjects && projects}>
         {loadingProjects && <LoadingOverlay />}
         {projects && (
           <DocumentList
@@ -65,6 +65,10 @@ const ProjectsPage = () => {
               <DocumentText>{projectData.subDescription}</DocumentText>
             )}
           />
+        )}
+
+        {!loadingProjects && !projects && (
+          <NoProjectsText>Trenutno nema projekata</NoProjectsText>
         )}
       </ProjectsContainer>
       <Divider />
@@ -95,7 +99,11 @@ export default ProjectsPage;
 
 const ProjectsContainer = styled.div`
   width: 100%;
-  min-height: 40vh;
+  min-height: ${(props) => (!props.$projectsFound ? "40vh" : "0")};
+`;
+
+const NoProjectsText = styled.p`
+  margin-top: 2rem;
 `;
 
 const OtherNewsTitle = styled.h3`
