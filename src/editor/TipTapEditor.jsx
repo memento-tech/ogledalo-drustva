@@ -15,13 +15,14 @@ import { CustomImages } from "./components/ImagesComponent";
 import { getDocumentForId, saveDocument } from "../adapters/DocumentAdapter";
 import { usePopups } from "../popup/PopupContext";
 import DocumentSaveSuccessPopup from "../popup/popups/DocumentSaveSuccessPopup";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const initEditorHTML = "<br/><br/><p>Let's be creative...</p>";
 
 const TipTapEditor = () => {
   const { addPopup } = usePopups();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const [resetCounter, setResetCounter] = useState(0);
   const [documentInfo, setDocumentInfo] = useState(undefined);
@@ -51,6 +52,7 @@ const TipTapEditor = () => {
     if (documentId) {
       getDocumentForId(documentId).then((result) => {
         if (!result) {
+          alert("Document with id [" + documentId + "] not found!");
         } else {
           fetch(result.contentPath)
             .then((response) => response.text())
@@ -108,6 +110,8 @@ const TipTapEditor = () => {
             documentId={documentId}
           />
         ));
+
+        navigate("/admin?documentId=" + documentId);
       }
     });
   };
@@ -139,6 +143,8 @@ const TipTapEditor = () => {
     setResetCounter((c) => c + 1);
     editor.commands.clearContent();
     editor.commands.setContent(initEditorHTML, true);
+
+    navigate("/admin", { replace: true });
   };
 
   return (

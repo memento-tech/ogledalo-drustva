@@ -11,7 +11,7 @@ const TopNewsPresentationPopup = ({ zIndex, closePopup, newsData }) => {
         <Label>
           This is how the end user will see this news in top news on Home Page
         </Label>
-        <TopNewsCarousel news={newsData} />
+        <TopNewsCarousel news={newsData} presentational={true} />
       </PopupMainContainer>
     </ContextPopupModal>
   );

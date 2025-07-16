@@ -45,7 +45,7 @@ const DocumentInformationEditor = ({
     if (documentInfo) {
       setId(documentInfo.id || undefined);
       setIsNews(documentInfo.isNews || true);
-      setPublishStatus(documentInfo.publisStatus || "DRAFT");
+      setPublishStatus(documentInfo.publishStatus || "DRAFT");
       setTitle(documentInfo.title || "");
       setDescription(documentInfo.description || "");
       setTopImage(documentInfo.topImage || undefined);
@@ -72,7 +72,7 @@ const DocumentInformationEditor = ({
     if (documentInfo) {
       setId(documentInfo.id || undefined);
       setIsNews(documentInfo.isNews || true);
-      setPublishStatus(documentInfo.publisStatus || "DRAFT");
+      setPublishStatus(documentInfo.publishStatus || "DRAFT");
       setTitle(documentInfo.title || "");
       setDescription(documentInfo.description || "");
       setTopImage(documentInfo.topImage || undefined);
@@ -119,9 +119,11 @@ const DocumentInformationEditor = ({
         closePopup={closePopup}
         newsData={[
           {
-            img: topImage && topImage.src,
-            topTitle: title,
-            topDescription: description,
+            topImage: {
+              src: topImage && topImage.src,
+            },
+            title: title,
+            description: description,
           },
         ]}
       />
@@ -136,7 +138,9 @@ const DocumentInformationEditor = ({
         closePopup={closePopup}
         newsData={[
           {
-            img: topImage && topImage.src,
+            topImage: {
+              src: topImage && topImage.src,
+            },
             title: title,
             description: description,
           },
@@ -152,7 +156,9 @@ const DocumentInformationEditor = ({
         zIndex={zIndex}
         closePopup={closePopup}
         projectData={{
-          img: topImage && topImage.src,
+          topImage: {
+            src: topImage && topImage.src,
+          },
           title,
           description,
           projectDonator,
@@ -250,6 +256,7 @@ const DocumentInformationEditor = ({
               <input
                 type="date"
                 min={getTomorrowDateISO()}
+                value={publishDate}
                 onChange={(e) => setPublishDate(e.target.value)}
               />
             </SelectContainer>

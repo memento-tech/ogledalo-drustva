@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getDocumentUrlSegment } from "../adapters/DocumentAdapter";
 
-const TopNewsCarousel = ({ news = [] }) => {
+const TopNewsCarousel = ({ news = [], presentational = false }) => {
   const displayableNews = news.slice(0, 5);
   const [visibleNews, setVisibleNews] = useState();
   const [counter, setCounter] = useState(0);
@@ -81,17 +81,20 @@ const TopNewsCarousel = ({ news = [] }) => {
   return (
     <CarouselContainer>
       <TopNewsContainer
-        onClick={() =>
-          navigate(
-            "/news/" + getDocumentUrlSegment(visibleNews.title, visibleNews.id),
-            {
-              state: {
-                id: visibleNews.id,
-                contentPath: visibleNews.contentPath,
-              },
-            }
-          )
-        }
+        onClick={() => {
+          if (!presentational) {
+            navigate(
+              "/news/" +
+                getDocumentUrlSegment(visibleNews.title, visibleNews.id),
+              {
+                state: {
+                  id: visibleNews.id,
+                  contentPath: visibleNews.contentPath,
+                },
+              }
+            );
+          }
+        }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
