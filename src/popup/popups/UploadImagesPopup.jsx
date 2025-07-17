@@ -7,9 +7,11 @@ import CheckedIcon from "../../icons/CheckedIcon";
 import {
   deleteImages,
   getAllImages,
+  updateImageDescription,
   uploadImage,
 } from "../../adapters/ImagesAdapter";
 import LoadingOverlay from "../../components/LoadingOverlay";
+import SaveIcon from "../../icons/SaveIcon";
 
 const UploadImagesPopup = ({
   onSubmit,
@@ -22,6 +24,7 @@ const UploadImagesPopup = ({
   const [visibleImage, setVisibleImage] = useState(
     presetImages ? presetImages[0] : undefined
   );
+  const [visibleImageDescription, setVisibleImageDescription] = useState();
   const [selectedImages, setSelectedImages] = useState(
     presetImages ? presetImages : []
   );
@@ -108,6 +111,30 @@ const UploadImagesPopup = ({
     }
   };
 
+  useEffect(() => {
+    if (visibleImage) {
+      if (!visibleImage.alt) {
+        visibleImage.alt = "";
+      }
+      setVisibleImageDescription(visibleImage.alt);
+    }
+  }, [visibleImage]);
+
+  const saveImageDescription = () => {
+    updateImageDescription(visibleImage.id, visibleImageDescription).then(
+      (data) => {
+        if (data) {
+          setVisibleImage(data);
+          setAvailableImages((prevImages) =>
+            prevImages.map((img) =>
+              img.id === data.id ? { ...img, alt: data.alt } : img
+            )
+          );
+        }
+      }
+    );
+  };
+
   return (
     <ContextPopupModal zIndex={zIndex} onClose={closePopup}>
       <PopupMainContainer $width="600px">
@@ -120,7 +147,32 @@ const UploadImagesPopup = ({
         Image Upload
         <Container>
           <ImageUploadContainer>
-            {visibleImage && <SelectedImage src={visibleImage.src} />}
+            {visibleImage && (
+              <>
+                <SelectedImage src={visibleImage.src} />
+                <ImageDescInputContainer>
+                  <LabelStyled htmlFor="alt">
+                    Image description
+                    {visibleImage.alt !== visibleImageDescription &&
+                      "(Not Saved)"}
+                  </LabelStyled>
+                  <InputStyled
+                    id="alt"
+                    type="text"
+                    name="alt"
+                    required
+                    value={visibleImageDescription}
+                    onChange={(event) => {
+                      setVisibleImageDescription(event.target.value);
+                    }}
+                  />
+                  <SaveButtonContainer onClick={saveImageDescription}>
+                    <SaveIcon height={20} />
+                  </SaveButtonContainer>
+                </ImageDescInputContainer>
+              </>
+            )}
+
             <PopupButtons
               buttons={[
                 {
@@ -203,6 +255,47 @@ const UploadImagesPopup = ({
 
 export default UploadImagesPopup;
 
+const ImageDescInputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  position: relative;
+`;
+
+const SaveButtonContainer = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  cursor: pointer;
+`;
+
+const LabelStyled = styled.label`
+  width: 100%;
+  text-align: start;
+  margin-top: 0.5rem;
+  font-style: italic;
+  font-size: ${(props) => props.theme.fonts.small};
+`;
+
+const InputStyled = styled.input`
+  width: 100%;
+  color: ${(props) => props.theme.colors.textPrimary};
+  border: none;
+  border-bottom: 2px solid ${(props) => props.theme.colors.border};
+  outline: none;
+  background-color: transparent;
+  transition: border-color 0.3s ease;
+  margin-top: 0.2rem;
+  padding-right: 25px;
+  box-sizing: border-box;
+
+  &:focus {
+    border-color: rgba(36, 91, 150, 0.97);
+  }
+`;
+
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
@@ -215,7 +308,7 @@ const Container = styled.div`
 const ImageUploadContainer = styled.div`
   width: 65%;
   max-width: 60%;
-  height: 300px;
+  height: 350px;
   display: flex;
   flex-direction: column;
   justify-content: center;

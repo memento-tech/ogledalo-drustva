@@ -178,6 +178,7 @@ const TopNewsTitle = styled.h3`
 `;
 
 const TopNewsText = styled.p`
+  text-align: center;
   @media screen and (max-width: ${(props) => props.theme.screen.small}) {
     max-height: 150px;
     overflow: hidden;
@@ -186,10 +187,10 @@ const TopNewsText = styled.p`
 `;
 
 const CarouselImage = styled.img`
-  min-width: 60%;
+  min-width: 50%;
   max-width: 60%;
   max-height: 500px;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   border-radius: 10px;
   overflow: hidden;
@@ -208,7 +209,7 @@ const CarouselTextContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin: 0 2rem 0 3rem;
-  width: 40%;
+  min-width: 40%;
 
   @media screen and (max-width: ${(props) => props.theme.screen.small}) {
     margin: auto;

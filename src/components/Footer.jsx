@@ -28,10 +28,24 @@ const Footer = () => {
               >
                 Adresa: {websiteData.address}
               </ContactInfo>
-              <ContactInfo href={"tel:" + websiteData.phoneNumber}>
+              <ContactInfo
+                href={"tel:" + websiteData.phoneNumber}
+                onClick={() =>
+                  logEvent(analytics, "user_interaction", {
+                    firebase_screen: "PhoneNumber",
+                  })
+                }
+              >
                 Telefon: {websiteData.phoneNumber}
               </ContactInfo>
-              <ContactInfo href={"mailto:" + websiteData.email}>
+              <ContactInfo
+                href={"mailto:" + websiteData.email}
+                onClick={() =>
+                  logEvent(analytics, "user_interaction", {
+                    firebase_screen: "Email",
+                  })
+                }
+              >
                 Email: {websiteData.email}
               </ContactInfo>
             </>
@@ -52,6 +66,11 @@ const Footer = () => {
                   href={websiteData.facebookLink}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() =>
+                    logEvent(analytics, "user_interaction", {
+                      firebase_screen: "Facebook",
+                    })
+                  }
                 >
                   <SocialMediaLink src={facebookLogo} />
                 </a>
@@ -61,6 +80,11 @@ const Footer = () => {
                   href={websiteData.instagramLink}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() =>
+                    logEvent(analytics, "user_interaction", {
+                      firebase_screen: "Instagram",
+                    })
+                  }
                 >
                   <SocialMediaLink src={instagramLogo} />
                 </a>
@@ -70,6 +94,11 @@ const Footer = () => {
                   href={websiteData.linkedinLink}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() =>
+                    logEvent(analytics, "user_interaction", {
+                      firebase_screen: "LinkedIn",
+                    })
+                  }
                 >
                   <SocialMediaLink src={linkedInLogo} />
                 </a>
@@ -79,6 +108,11 @@ const Footer = () => {
                   href={websiteData.twitterLink}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() =>
+                    logEvent(analytics, "user_interaction", {
+                      firebase_screen: "Twitter",
+                    })
+                  }
                 >
                   <SocialMediaLink src={twiterXLogo} />
                 </a>

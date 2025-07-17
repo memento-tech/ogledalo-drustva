@@ -50,3 +50,26 @@ export const getAllImages = () => {
       return [];
     });
 };
+
+export const updateImageDescription = (id, description) => {
+  let s = {
+    imageId: id + "",
+    alt: description,
+  };
+
+  return API.post("/api/images/description", s)
+    .then((response) => {
+      if (response.status !== HttpStatusCode.Ok) {
+        console.error(
+          "Something went wrong, return status is: " + response.status
+        );
+        alert("Something went wrong, please try later.");
+      }
+
+      return response.data;
+    })
+    .catch((error) => {
+      console.error(error.data.errorCode);
+      alert("Something went wrong, please try later.");
+    });
+};

@@ -31,7 +31,18 @@ const HomePage = () => {
   return (
     <PageTemplate>
       <HomePageContainer>
+        <SEOHeader>Najnovije aktuelnosti</SEOHeader>
+        <SEOSubHeader>
+          Pročitajte najnovije vesti, analize i dešavanja na portalu Ogledalo
+          Društva – vašem izvoru za kulturu, društvo i istinu.
+        </SEOSubHeader>
         <TopNewsCarousel news={topNews} />
+
+        <SEOHeader>Ostale novosti</SEOHeader>
+        <SEOSubHeader>
+          U ostalim vestima pronađite sve važne informacije i događaje koji
+          oblikuju naše društvo.
+        </SEOSubHeader>
         <DocumentList
           documents={otherNews}
           onDocumentClick={(title, id, contentPath) =>
@@ -53,6 +64,20 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
+const SEOHeader = styled.h1`
+  width: 200px;
+  height: 50px;
+  text-indent: -9999px;
+  position: absolute;
+`;
+
+const SEOSubHeader = styled.h2`
+  width: 200px;
+  height: 50px;
+  text-indent: -9999px;
+  position: absolute;
+`;
 
 const HomePageContainer = styled.div`
   box-sizing: border-box;

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import coverImage from "../assets/cover-image.webp";
 import logoLarge from "../assets/logo-512.png";
-import founterImage from "../assets/founder-image.webp";
+import founderImage from "../assets/founder-image.webp";
 import PageTemplate from "./PageTemplate";
 import { analytics } from "../firebase";
 import { logEvent } from "firebase/analytics";
@@ -39,10 +39,20 @@ const AboutUsPage = () => {
             <b>nepristrasno i profesionalno informisanje.</b>
           </Text>
         </TextContainer>
-        <AboutUsImage src={coverImage} />
+        <AboutUsImage
+          src={coverImage}
+          alt="Veb portal Ogledalo društva kreiran je 2025 godine. Na portalu
+            možete pročitati važne informacije koje se tiču društveno osetljivih
+            grupa, socijalno-ekonomske kao i informacije iz oblasti kulture i
+            turizma."
+        />
       </AboutUsContainer>
       <FounterContainer>
-        <FounderImage src={founterImage} />
+        <FounderImage
+          src={founderImage}
+          alt="Snežana Žarković Dražić, diplomirani sociolog i osnivač portala
+            Ogledalo društva, rođena je 1987.godine u Aleksandrovcu."
+        />
         <TextContainer>
           <Title>Osnivač</Title>
           <Text>

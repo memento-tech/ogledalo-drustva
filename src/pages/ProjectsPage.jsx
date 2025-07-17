@@ -43,9 +43,27 @@ const ProjectsPage = () => {
 
   return (
     <PageTemplate>
-      <ProjectsContainer $projectsFound={!loadingProjects && projects}>
+      <ProjectsContainer $loading={loadingProjects}>
+        <HeadingContainer>
+          <Title>Projekti</Title>
+          <SubTitle>
+            U okviru rubrike Projekti, portal Ogledalo društva donosi pregled
+            aktivnosti i inicijativa koje sprovodimo ili pratimo u oblastima od
+            posebnog društvenog značaja. Fokusirani smo na teme koje doprinose
+            unapređenju kvaliteta života i većoj inkluziji – osobe sa
+            invaliditetom, turizam, kultura, zdravstvo i prosveta.
+          </SubTitle>
+
+          <SubTitle>
+            Kroz projekte promovišemo pozitivne primere, podržavamo lokalne
+            zajednice i podstičemo dijalog o važnim društvenim pitanjima. Naša
+            misija je da informišemo, inspirišemo i povežemo aktere koji rade na
+            stvaranju ravnopravnijeg i pristupačnijeg društva za sve.
+          </SubTitle>
+        </HeadingContainer>
+
         {loadingProjects && <LoadingOverlay />}
-        {projects && (
+        {projects && projects.length > 0 && (
           <DocumentList
             documents={projects}
             onDocumentClick={(id, contentPath) =>
@@ -67,7 +85,7 @@ const ProjectsPage = () => {
           />
         )}
 
-        {!loadingProjects && !projects && (
+        {!loadingProjects && !projects.length > 0 && (
           <NoProjectsText>Trenutno nema projekata</NoProjectsText>
         )}
       </ProjectsContainer>
@@ -97,13 +115,34 @@ const ProjectsPage = () => {
 
 export default ProjectsPage;
 
+const HeadingContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+const Title = styled.h1`
+  margin-top: 2rem;
+  font-size: ${(props) => props.theme.fonts.medium};
+`;
+
+const SubTitle = styled.h3`
+  font-size: ${(props) => props.theme.fonts.small} !important;
+  width: 80%;
+  text-align: center;
+  font-weight: 200;
+`;
+
 const ProjectsContainer = styled.div`
   width: 100%;
-  min-height: ${(props) => (!props.$projectsFound ? "40vh" : "0")};
 `;
 
 const NoProjectsText = styled.p`
   margin-top: 2rem;
+  width: 100%;
+  text-align: center;
+  font-style: italic;
 `;
 
 const OtherNewsTitle = styled.h3`

@@ -16,20 +16,16 @@ const ContactPage = () => {
     <PageTemplate>
       <PageContainer>
         <Title>Kontaktirajte nas!</Title>
-        <Text>
-          <b>
-            Imate pitanje, sugestiju ili želite da podelite svoje mišljenje?
-          </b>
-        </Text>
+        <SubTitle>
+          Imate pitanje, sugestiju ili želite da podelite svoje mišljenje?
+        </SubTitle>
         <Text>
           Tu smo da vas saslušamo. Bilo da imate preporuku, komentar, želite da
           podelite priču, prijavite problem ili nas pohvalite – slobodno nam
           pišite putem formulara ispod.
         </Text>
         <Text>Odgovorićemo vam u najkraćem mogućem roku.</Text>
-        <Text>
-          Hvala što ste deo <b>Ogledala društva.</b>
-        </Text>
+        <SubTitle>Hvala što ste deo Ogledala društva.</SubTitle>
         <ContactUsForm />
       </PageContainer>
     </PageTemplate>
@@ -47,14 +43,20 @@ const PageContainer = styled.div`
   text-align: center;
 `;
 
-const Title = styled.h3`
+const Title = styled.h1`
   margin-top: 2rem;
+  font-size: ${(props) => props.theme.fonts.logo};
+`;
+
+const SubTitle = styled.h3`
+  font-size: ${(props) => props.theme.fonts.title};
 `;
 
 const Text = styled.p`
   width: 600px;
   margin: 0;
   margin-bottom: 0.5rem;
+  font-size: ${(props) => props.theme.fonts.medium};
 
   @media screen and (max-width: ${(props) => props.theme.screen.medium}) {
     width: 95%;

@@ -20,7 +20,7 @@ const DocumentViewPage = () => {
   const id = titleId.substring(titleId.lastIndexOf("_withId_") + 8);
 
   useEffect(() => {
-    getOtherNews(1, 1, true, id).then((otherNews) => {
+    getOtherNews(1, 3, true, id).then((otherNews) => {
       setOtherNews(otherNews.data);
       setLoadingOtherNews(false);
     });
@@ -28,7 +28,7 @@ const DocumentViewPage = () => {
     logEvent(analytics, "page_view", {
       firebase_screen: "DocumentViewPage",
     });
-  }, []);
+  }, [titleId]);
 
   return (
     <PageTemplate>
@@ -47,6 +47,7 @@ const DocumentViewPage = () => {
               documents={otherNews}
               onDocumentClick={(title, id, contentPath) =>
                 navigate("/news/" + getDocumentUrlSegment(title, id), {
+                  replace: true,
                   state: {
                     id: id,
                     contentPath: contentPath,

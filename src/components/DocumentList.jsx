@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import PageNumbers from "./PageNumbers";
+import { logEvent } from "firebase/analytics";
 
 const DocumentList = ({
   documents = [],
@@ -17,13 +18,16 @@ const DocumentList = ({
       {documents.map((documentData, index) => (
         <DocumentCard
           key={index}
-          onClick={() =>
+          onClick={() => {
+            logEvent(analytics, "user_interaction", {
+              firebase_screen: "DocumentClicked:" + documentData.id,
+            });
             onDocumentClick(
               documentData.title,
               documentData.id,
               documentData.contentPath
-            )
-          }
+            );
+          }}
           $presentational={presentational}
         >
           {bluredImage ? (

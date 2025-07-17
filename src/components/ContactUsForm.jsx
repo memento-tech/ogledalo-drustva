@@ -1,4 +1,5 @@
 import { useForm } from "@formspree/react";
+import { logEvent } from "firebase/analytics";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -70,6 +71,11 @@ const ContactUsForm = () => {
         <SubmitButton
           type="submit"
           disabled={!validateForm() || state.submitting}
+          onSubmit={() => {
+            logEvent(analytics, "user_interaction", {
+              firebase_screen: "ContactUsForm",
+            });
+          }}
         >
           Send
         </SubmitButton>
