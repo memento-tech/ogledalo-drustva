@@ -7,9 +7,12 @@ import {
 } from "../../adapters/WebsiteDataAdapter";
 import { usePopups } from "../../popup/PopupContext";
 import InfoPopup from "../../popup/popups/InfoPopup";
+import { logout, updatePassword } from "../../adapters/AuthAdapter";
+import { useNavigate } from "react-router";
 
 const AdminSettingsPage = () => {
   const { addPopup } = usePopups();
+  const navigate = useNavigate();
 
   const [catchPhrase, setCatchPhrase] = useState("");
   const [address, setAddress] = useState("");
@@ -66,6 +69,117 @@ const AdminSettingsPage = () => {
       ));
     });
   };
+
+  const onUpdatePassword = () => {
+    let message = validatePassword(password, retypePassword);
+
+    if (message) {
+      var retypePasswordError = undefined;
+      if (password !== retypePassword) {
+        retypePasswordError = "Please retype password!";
+      }
+      var description = undefined;
+      if (retypePasswordError) {
+        description = retypePasswordError;
+      } else {
+        description = (
+          <>
+            {message}
+            <br />
+            <br />
+            Password validation rules are:
+            <br />- At least 6 characters
+            <br />- At least one uppercase letter
+            <br />- At least one lowercase letter
+            <br />- At least one digit
+          </>
+        );
+      }
+
+      addPopup((key, zIndex, closePopup) => (
+        <InfoPopup
+          key={key}
+          zIndex={zIndex}
+          closePopup={closePopup}
+          onConfirm={undefined}
+          title={"Wrong Password Format"}
+          description={description}
+        />
+      ));
+
+      return;
+    }
+    updatePassword(password).then((result) => {
+      if (result) {
+        addPopup((key, zIndex, closePopup) => (
+          <InfoPopup
+            key={key}
+            zIndex={zIndex}
+            closePopup={() => {
+              closePopup();
+              console.log("dasdasdas");
+              logout();
+              navigate(0);
+            }}
+            onConfirm={undefined}
+            title={"Password updated successfully!"}
+            description={
+              "Your password is updated. You will be logged out now."
+            }
+          />
+        ));
+      } else {
+        addPopup((key, zIndex, closePopup) => (
+          <InfoPopup
+            key={key}
+            zIndex={zIndex}
+            closePopup={closePopup}
+            onConfirm={undefined}
+            title={"Password Update Fail"}
+            description={
+              "Password is not updated, something went wrong. Please try later."
+            }
+          />
+        ));
+      }
+    });
+  };
+
+  function validatePassword(password, retypePassword) {
+    // Example validation rules:
+    // - At least 6 characters
+    // - At least one uppercase letter
+    // - At least one lowercase letter
+    // - At least one digit
+
+    if (password !== retypePassword) {
+      return "Please retype password!";
+    }
+
+    const minLength = 6;
+    const uppercasePattern = /[A-Z]/;
+    const lowercasePattern = /[a-z]/;
+    const digitPattern = /[0-9]/;
+
+    if (typeof password !== "string") {
+      return "Password must be a string.";
+    }
+    if (password.length < minLength) {
+      return `Password must be at least ${minLength} characters.`;
+    }
+    if (!uppercasePattern.test(password)) {
+      return "Password must include at least one uppercase letter.";
+    }
+    if (!lowercasePattern.test(password)) {
+      return "Password must include at least one lowercase letter.";
+    }
+    if (!digitPattern.test(password)) {
+      return "Password must include at least one digit.";
+    }
+
+    return undefined;
+  }
+
   return (
     <Container>
       <PartContainer>
@@ -157,7 +271,9 @@ const AdminSettingsPage = () => {
             value={retypePassword}
           />
         </InputContainer>
-        <ButtonOutlined>Update password</ButtonOutlined>
+        <ButtonOutlined onClick={onUpdatePassword}>
+          Update password
+        </ButtonOutlined>
       </PartContainer>
     </Container>
   );

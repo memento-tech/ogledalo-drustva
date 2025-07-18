@@ -29,6 +29,22 @@ export const checkLoggedIn = () => {
     });
 };
 
+export const updatePassword = (password) => {
+  return API.post("/api/auth/password/update", { password })
+    .then((response) => {
+      if (response.status === HttpStatusCode.Ok) {
+        return true;
+      }
+      logout();
+      return false;
+    })
+    .catch((error) => {
+      logout();
+      console.error(error.data.errorCode);
+      return false;
+    });
+};
+
 export const logout = () => {
   localStorage.removeItem("token");
   API.defaults.headers.common["Authorization"] = "";
