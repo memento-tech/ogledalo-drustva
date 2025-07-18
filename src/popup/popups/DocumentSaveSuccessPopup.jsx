@@ -3,14 +3,50 @@ import ContextPopupModal from "../ContextPopupModal";
 import { PopupMainContainer } from "../components/PopupMainContainer";
 import PopupButtons from "../components/PopupButtons";
 import { downloadPDFDocument } from "../../adapters/DocumentAdapter";
+import { useState } from "react";
+import { usePopups } from "../PopupContext";
+import LoadingOverlay from "../../components/LoadingOverlay";
+import InfoPopup from "./InfoPopup";
 
-const DocumentSaveSuccessPopup = ({ documentId, zIndex, closePopup }) => {
+const DocumentSaveSuccessPopup = ({
+  documentId,
+  zIndex,
+  closePopup,
+  documentTitle,
+}) => {
+  const { addPopup } = usePopups();
+  const [loading, setLoading] = useState(false);
+
   const onDownloadPDF = () => {
-    downloadPDFDocument(documentId);
+    setLoading(true);
+
+    downloadPDFDocument(documentId).then((data) => {
+      const blob = new Blob([data], { type: "application/pdf" });
+
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      let documentName = documentTitle.replaceAll(" ", "_");
+      link.download = documentName + ".pdf";
+      link.click();
+
+      setLoading(false);
+
+      addPopup((key, zIndex, closePopup) => (
+        <InfoPopup
+          key={key}
+          zIndex={zIndex}
+          closePopup={closePopup}
+          onConfirm={undefined}
+          title={"PDF Download Finished"}
+          description={"Your PDF copy of document is downloaded."}
+        />
+      ));
+    });
   };
 
   return (
     <ContextPopupModal zIndex={zIndex} onClose={closePopup}>
+      {loading && <LoadingOverlay masked={true} />}
       <PopupMainContainer $width="300px">
         Success
         <LabelStyled>Document is saved successfully!</LabelStyled>

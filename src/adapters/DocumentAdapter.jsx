@@ -15,26 +15,23 @@ export const saveDocument = (documentData) => {
 };
 
 export const downloadPDFDocument = async (documentId) => {
-  try {
-    const response = await API.get(
-      "/api/document/generatePDF?documentId=" + documentId,
-      {
-        responseType: "blob",
-        headers: {
-          Accept: "application/pdf",
-        },
+  return API.get("/api/document/generatePDF?documentId=" + documentId, {
+    responseType: "blob",
+    headers: {
+      Accept: "application/pdf",
+    },
+  })
+    .then((response) => {
+      if (response.data) {
+        return response.data;
       }
-    );
-
-    const blob = new Blob([response.data], { type: "application/pdf" });
-
-    const link = document.createElement("a");
-    link.href = window.URL.createObjectURL(blob);
-    link.download = "document.pdf";
-    link.click();
-  } catch (error) {
-    console.error("Error downloading PDF:", error);
-  }
+      console.error("Something went wrong, document ID is not returned.");
+      return undefined;
+    })
+    .catch((error) => {
+      console.error(error.data.errorCode);
+      return undefined;
+    });
 };
 
 export const getAllDocuments = (pageNumber) => {

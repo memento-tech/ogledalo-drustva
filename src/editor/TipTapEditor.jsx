@@ -114,6 +114,7 @@ const TipTapEditor = () => {
             zIndex={zIndex}
             closePopup={closePopup}
             documentId={documentId}
+            documentTitle={documentData.title}
           />
         ));
 
