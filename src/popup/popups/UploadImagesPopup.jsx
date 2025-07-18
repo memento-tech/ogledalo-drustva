@@ -12,6 +12,8 @@ import {
 } from "../../adapters/ImagesAdapter";
 import LoadingOverlay from "../../components/LoadingOverlay";
 import SaveIcon from "../../icons/SaveIcon";
+import { usePopups } from "../PopupContext";
+import InfoPopup from "./InfoPopup";
 
 const UploadImagesPopup = ({
   onSubmit,
@@ -20,6 +22,7 @@ const UploadImagesPopup = ({
   oneImageOnly,
   presetImages,
 }) => {
+  const { addPopup } = usePopups();
   const [loading, setLoading] = useState(false);
   const [visibleImage, setVisibleImage] = useState(
     presetImages ? presetImages[0] : undefined
@@ -47,30 +50,83 @@ const UploadImagesPopup = ({
     });
   };
 
+  const onUploadImage = () => {
+    fileInputRef.current?.click();
+  };
+
   const handleFileChange = async (e) => {
     setLoading(true);
     const files = Array.from(e.target.files || []);
 
-    if (files.length === 0) return;
+    if (files.length === 0) {
+      setLoading(false);
+      return;
+    }
 
-    const uploadPromises = files.map((file) => {
-      const formData = new FormData();
-      formData.append("file", file);
-      return uploadImage(formData);
-    });
+    const maxSize = 15 * 1024 * 1024; // 15MB
+    const allowedExtensions = ["jpg", "jpeg", "png", "svg", "gif"];
 
-    await Promise.all(uploadPromises); // Waits for all uploads to finish
+    for (let file of files) {
+      const fileExtension = file.name.split(".").pop().toLowerCase();
+      const isAllowed = allowedExtensions.includes(fileExtension);
+      const isTooLarge = file.size > maxSize;
 
-    fetchAllImages(); // Called only after all uploads are done
-    setLoading(false);
+      if (!isAllowed || isTooLarge) {
+        let errorMsg = "";
+
+        if (!isAllowed) {
+          errorMsg = `Only images with extensions ${allowedExtensions.join(
+            ", "
+          )} are allowed.`;
+        } else if (isTooLarge) {
+          errorMsg = `The file "${file.name}" exceeds the 15MB size limit.`;
+        }
+
+        addPopup((key, zIndex, closePopup) => (
+          <InfoPopup
+            key={key}
+            zIndex={zIndex}
+            closePopup={closePopup}
+            onConfirm={undefined}
+            title={"Upload Failed"}
+            description={errorMsg}
+          />
+        ));
+
+        setLoading(false);
+        return;
+      }
+    }
+
+    try {
+      const uploadPromises = files.map((file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        return uploadImage(formData);
+      });
+
+      await Promise.all(uploadPromises);
+      fetchAllImages();
+    } catch (err) {
+      addPopup((key, zIndex, closePopup) => (
+        <InfoPopup
+          key={key}
+          zIndex={zIndex}
+          closePopup={closePopup}
+          onConfirm={undefined}
+          title={"Upload Failed"}
+          description={
+            "An unexpected error occurred during upload. Please try again later."
+          }
+        />
+      ));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const fetchAllImages = () => {
     getAllImages().then((result) => setAvailableImages(result));
-  };
-
-  const onUploadImage = () => {
-    fileInputRef.current?.click();
   };
 
   const addImageToSelection = async (selection) => {

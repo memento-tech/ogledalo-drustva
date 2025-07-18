@@ -53,6 +53,7 @@ const TipTapEditor = () => {
       getDocumentForId(documentId).then((result) => {
         if (!result) {
           alert("Document with id [" + documentId + "] not found!");
+          navigate("/admin", { replace: true });
         } else {
           fetch(result.contentPath)
             .then((response) => response.text())
@@ -67,11 +68,16 @@ const TipTapEditor = () => {
     }
   }, [editor]);
 
+  function wrapWithRoot(html) {
+    return `<div>${html}</div>`;
+  }
+
   function makeHtmlXhtmlCompliant(html) {
     return html
-      .replace(/<img([^>]*?)(?<!\/)>/g, "<img$1 />")
-      .replace(/<br([^>]*?)(?<!\/)>/g, "<br$1 />")
-      .replace(/<hr([^>]*?)(?<!\/)>/g, "<hr$1 />");
+      .replace(/<img([^>]*)>/gi, "<img$1 />")
+      .replace(/<br([^>]*)>/gi, "<br$1 />")
+      .replace(/<hr([^>]*)>/gi, "<hr$1 />")
+      .replace(/&(?!amp;|lt;|gt;|quot;|apos;)/g, "&amp;");
   }
 
   const onSaveDocument = (event) => {
@@ -97,7 +103,7 @@ const TipTapEditor = () => {
       topContent: documentInfo.isTopNews,
       topImageId: documentInfo.topImage?.id,
       publishDate: documentInfo.publishDate,
-      documentContent: makeHtmlXhtmlCompliant(editor.getHTML()),
+      documentContent: wrapWithRoot(makeHtmlXhtmlCompliant(editor.getHTML())),
     };
 
     saveDocument(documentData).then((documentId) => {

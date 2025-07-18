@@ -102,7 +102,10 @@ const TopNewsCarousel = ({ news = [], presentational = false }) => {
           visibleNews.topImage !== null && visibleNews.topImage !== undefined
         }
       >
-        <CarouselImage src={visibleNews.topImage?.src} alt="No image found" />
+        <CarouselImage
+          src={visibleNews.topImage?.src}
+          alt={visibleNews.topImage?.alt}
+        />
         <CarouselTextContainer>
           <TopNewsTitle>{visibleNews.title}</TopNewsTitle>
           <TopNewsText>{visibleNews.description}</TopNewsText>

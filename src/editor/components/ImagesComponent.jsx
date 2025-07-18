@@ -3,6 +3,7 @@ import { NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
 import { useState } from "react";
 import styled from "styled-components";
 import EditIcon from "../../icons/EditIcon";
+import ResizableWrapper from "./ResizableWrapper";
 
 export const CustomImages = Node.create({
   name: "images",
@@ -62,6 +63,7 @@ export const CustomImages = Node.create({
         "img",
         {
           src: img.src,
+          alt: img.alt,
           style: `width: ${width}; height: ${height}; object-fit: cover; border-radius: 10px;`,
         },
       ]),
@@ -108,33 +110,37 @@ const ImagesComponent = ({
             : "center",
       }}
     >
-      <ResizableBox className="res" style={{ width, height }}>
-        <ImageWrapper>
-          {images[index] && <CarouselImage src={images[index].src} />}
-          <EditButton
-            onClick={() =>
-              handleImageUpdatePopup(
-                images,
-                updateAttributes,
-                images.length === 1
-              )
-            }
-          >
-            <EditIcon height={20} />
-          </EditButton>
-        </ImageWrapper>
-        {images.length > 1 && (
-          <DotsContainer>
-            {images.map((_, i) => (
-              <Dot
-                key={i}
-                $active={i === index}
-                onClick={() => handleDotClick(i)}
-              />
-            ))}
-          </DotsContainer>
-        )}
-      </ResizableBox>
+      <ResizableWrapper node={node} updateAttributes={updateAttributes}>
+        <ResizableBox className="res" style={{ width, height }}>
+          <ImageWrapper>
+            {images[index] && (
+              <CarouselImage src={images[index].src} alt={images[index].alt} />
+            )}
+            <EditButton
+              onClick={() =>
+                handleImageUpdatePopup(
+                  images,
+                  updateAttributes,
+                  images.length === 1
+                )
+              }
+            >
+              <EditIcon height={20} />
+            </EditButton>
+          </ImageWrapper>
+          {images.length > 1 && (
+            <DotsContainer>
+              {images.map((_, i) => (
+                <Dot
+                  key={i}
+                  $active={i === index}
+                  onClick={() => handleDotClick(i)}
+                />
+              ))}
+            </DotsContainer>
+          )}
+        </ResizableBox>
+      </ResizableWrapper>
     </NodeViewWrapper>
   );
 };
