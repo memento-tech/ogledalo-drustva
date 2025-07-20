@@ -6,6 +6,8 @@ import facebookLogo from "../assets/facebook.png";
 import twiterXLogo from "../assets/twiterX.png";
 import { getWebsiteData } from "../adapters/WebsiteDataAdapter";
 import { useEffect, useState } from "react";
+import { analytics } from "../firebase";
+import { logEvent } from "firebase/analytics";
 
 const Footer = () => {
   const [websiteData, setWebsiteData] = useState();

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import PageNumbers from "./PageNumbers";
 import { logEvent } from "firebase/analytics";
+import { analytics } from "../firebase";
 
 const DocumentList = ({
   documents = [],

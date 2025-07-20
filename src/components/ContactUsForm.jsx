@@ -2,6 +2,7 @@ import { useForm } from "@formspree/react";
 import { logEvent } from "firebase/analytics";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { analytics } from "../firebase";
 
 const ContactUsForm = () => {
   const [state, handleSubmit, reset] = useForm("meoevqvq");
