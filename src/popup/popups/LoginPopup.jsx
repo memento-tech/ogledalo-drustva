@@ -6,7 +6,7 @@ import PopupButtons from "../components/PopupButtons";
 import { login } from "../../adapters/AuthAdapter";
 import { useNavigate } from "react-router-dom";
 
-const LoginPopup = ({ zIndex, onForgotPassword }) => {
+const LoginPopup = ({ zIndex }) => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -70,9 +70,6 @@ const LoginPopup = ({ zIndex, onForgotPassword }) => {
             },
           ]}
         />
-        <ForgotPasswordButton onClick={onForgotPassword}>
-          Forgot password
-        </ForgotPasswordButton>
       </PopupMainContainer>
     </ContextPopupModal>
   );
@@ -103,19 +100,6 @@ const InputStyled = styled.input`
 
 const Spacer = styled.div`
   margin-top: 1rem;
-`;
-
-const ForgotPasswordButton = styled.button`
-  border: none;
-  background-color: inherit;
-  margin-top: 0.5rem;
-  font-size: 12px;
-  font-family: inherit;
-  cursor: pointer;
-
-  &:hover {
-    transform: scale(1.1);
-  }
 `;
 
 const ErrorLabel = styled.p`
