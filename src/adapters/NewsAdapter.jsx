@@ -32,7 +32,7 @@ export const getTopNews = () => {
 
 export const getOtherNews = (
   pageNumber,
-  pageSize = 12,
+  pageSize = 5,
   includeTopNews = false,
   excludeNewsId = ""
 ) => {

@@ -14,44 +14,48 @@ const DocumentList = ({
   onPageChange = () => {},
   renderExtra = () => <></>,
 }) => {
+  console.log("totalPageNumbers: " + numberOfPages);
+
   return (
     <Container $presentational={presentational}>
-      {documents.map((documentData, index) => (
-        <DocumentCard
-          key={index}
-          onClick={() => {
-            logEvent(analytics, "user_interaction", {
-              firebase_screen: "DocumentClicked:" + documentData.id,
-            });
-            onDocumentClick(
-              documentData.title,
-              documentData.id,
-              documentData.contentPath
-            );
-          }}
-          $presentational={presentational}
-        >
-          {bluredImage ? (
-            <BluredDocumentTopImage src={documentData.topImage?.src} />
-          ) : (
-            <DocumentTopImage src={documentData.topImage?.src} />
-          )}
-
-          <DocumentTextContainer
-            id="textContainer"
-            $transformToLower={!bluredImage}
+      <DocumentsContainer>
+        {documents.map((documentData, index) => (
+          <DocumentCard
+            key={index}
+            onClick={() => {
+              logEvent(analytics, "user_interaction", {
+                firebase_screen: "DocumentClicked:" + documentData.id,
+              });
+              onDocumentClick(
+                documentData.title,
+                documentData.id,
+                documentData.contentPath
+              );
+            }}
+            $presentational={presentational}
           >
-            <DocumentTitle className="titleAndText">
-              {documentData.title}
-            </DocumentTitle>
-            <DocumentText className="titleAndText">
-              {documentData.description}
-            </DocumentText>
-            {renderExtra(documentData)}
-            <ReadMoreText id="readMoreText">Read more...</ReadMoreText>
-          </DocumentTextContainer>
-        </DocumentCard>
-      ))}
+            {bluredImage ? (
+              <BluredDocumentTopImage src={documentData.topImage?.src} />
+            ) : (
+              <DocumentTopImage src={documentData.topImage?.src} />
+            )}
+
+            <DocumentTextContainer
+              id="textContainer"
+              $transformToLower={!bluredImage}
+            >
+              <DocumentTitle className="titleAndText">
+                {documentData.title}
+              </DocumentTitle>
+              <DocumentText className="titleAndText">
+                {documentData.description}
+              </DocumentText>
+              {renderExtra(documentData)}
+              <ReadMoreText id="readMoreText">Read more...</ReadMoreText>
+            </DocumentTextContainer>
+          </DocumentCard>
+        ))}
+      </DocumentsContainer>
       <PageNumbers
         limitPageNumbers={limitPageNumbers}
         currentPageNumber={currentPageNumber}
@@ -66,13 +70,18 @@ export default DocumentList;
 
 const Container = styled.div`
   width: 100%;
+  padding-bottom: 1rem;
+`;
+
+const DocumentsContainer = styled.div`
+  width: 100%;
   display: grid;
   grid-template-columns: ${(props) =>
     props.$presentational ? "1fr" : "1fr 1fr 1fr"};
   grid-gap: 2rem;
   grid-row-gap: 6rem;
   margin-top: 3rem;
-  margin-bottom: 8rem;
+  margin-bottom: 6rem;
 
   @media screen and (max-width: ${(props) => props.theme.screen.small}) {
     grid-template-columns: 1fr;
@@ -132,6 +141,7 @@ const DocumentCard = styled.div`
 
 const DocumentTopImage = styled.img`
   min-width: 100%;
+  max-width: 100%;
   height: 200px;
   object-fit: cover;
   object-position: center;

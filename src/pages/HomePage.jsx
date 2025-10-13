@@ -15,19 +15,26 @@ const HomePage = () => {
   const [otherNews, setOtherNews] = useState();
 
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
-  const [numberOfPages, setNumberOfPages] = useState();
+  const [numberOfPages, setNumberOfPages] = useState(undefined);
 
   useEffect(() => {
-    getTopNews().then((responseData) => setTopNews(responseData));
-    getOtherNews(currentPageNumber).then((responseData) => {
-      setOtherNews(responseData?.data);
-      setNumberOfPages(responseData?.numberOfPages);
-    });
-
-    logEvent(analytics, "page_view", {
-      firebase_screen: "HomePage",
-    });
+    getTopNews().then(setTopNews);
+    logEvent(analytics, "page_view", { firebase_screen: "HomePage" });
   }, []);
+
+  useEffect(() => {
+    getOtherNews(currentPageNumber).then((responseData) => {
+      console.log("Other news:", responseData);
+      console.log("number of pages" + responseData.numberOfPages);
+      setNumberOfPages(responseData?.numberOfPages);
+      setOtherNews(responseData?.data);
+    });
+  }, [currentPageNumber]);
+
+  useEffect(() => {
+    console.log(numberOfPages);
+  }, [numberOfPages]);
+
   return (
     <PageTemplate>
       <HomePageContainer>
@@ -43,21 +50,23 @@ const HomePage = () => {
           U ostalim vestima pronađite sve važne informacije i događaje koji
           oblikuju naše društvo.
         </SEOSubHeader>
-        <DocumentList
-          documents={otherNews}
-          onDocumentClick={(title, id, contentPath) =>
-            navigate("/news/" + getDocumentUrlSegment(title, id), {
-              state: {
-                id: id,
-                contentPath: contentPath,
-              },
-            })
-          }
-          limitPageNumbers={5}
-          currentPageNumber={currentPageNumber}
-          totalPageNumbers={numberOfPages}
-          onPageChange={setCurrentPageNumber}
-        />
+        {otherNews && numberOfPages && (
+          <DocumentList
+            documents={otherNews}
+            onDocumentClick={(title, id, contentPath) =>
+              navigate("/news/" + getDocumentUrlSegment(title, id), {
+                state: {
+                  id: id,
+                  contentPath: contentPath,
+                },
+              })
+            }
+            limitPageNumbers={5}
+            currentPageNumber={currentPageNumber}
+            numberOfPages={numberOfPages}
+            onPageChange={setCurrentPageNumber}
+          />
+        )}
       </HomePageContainer>
     </PageTemplate>
   );
